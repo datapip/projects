@@ -18,7 +18,7 @@ window.dataLayer = window.dataLayer || [];
 if (!IS_PROD) {
   const originalPush = window.dataLayer.push.bind(window.dataLayer);
   window.dataLayer.push = function (...args) {
-    console.group("[debug] dataLayer.push");
+    console.groupCollapsed("[debug] dataLayer.push - event:", args[0]?.event || "unknown");
     console.log(...args);
     console.groupEnd();
     return originalPush(...args);
