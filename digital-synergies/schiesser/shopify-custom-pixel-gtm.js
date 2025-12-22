@@ -1,4 +1,4 @@
-/* Version 1.1.0 */
+/* Version 1.1.1 */
 
 const IS_PROD =
   init?.context?.document?.location?.hostname?.endsWith(".schiesser.com");
@@ -18,7 +18,10 @@ window.dataLayer = window.dataLayer || [];
 if (!IS_PROD) {
   const originalPush = window.dataLayer.push.bind(window.dataLayer);
   window.dataLayer.push = function (...args) {
-    console.groupCollapsed("[debug] dataLayer.push - event:", args[0]?.event || "unknown");
+    console.groupCollapsed(
+      "[debug] dataLayer.push - event:",
+      args[0]?.event || "unknown"
+    );
     console.log(...args);
     console.groupEnd();
     return originalPush(...args);
@@ -163,69 +166,6 @@ function hasRequiredData(data, eventName) {
   return valid;
 }
 
-function buildItemsFromVariant(variants, itemListName) {
-  if (!variants) return [];
-
-  return variants.map((variant, index) => {
-    const product = variant?.product;
-
-    return {
-      item_id: variant?.sku || variant?.id || product?.id || "",
-      item_name: product?.title || "",
-      item_brand: product?.vendor || "",
-      item_category: product?.type || "", // optional, empty is OK
-      item_variant: variant?.title || "",
-      item_list_name: itemListName,
-      index,
-      price: Number(variant?.price?.amount || 0),
-      quantity: 1,
-    };
-  });
-}
-
-function buildItemFromVariant(variant, index = 0) {
-  const product = variant?.product;
-
-  return {
-    item_id: variant?.sku || product?.id || "",
-    item_name: product?.title || "",
-    item_brand: product?.vendor || "",
-    item_category: product?.productType || "",
-    item_variant: variant?.title || "",
-    price: Number(variant?.price?.amount || 0),
-    quantity: 1,
-    index,
-  };
-}
-
-function buildItemsFromCart(cart) {
-  if (!cart?.lines) return [];
-  return cart.lines.map((line, index) => ({
-    item_id: line.merchandise?.sku || line.merchandise?.product?.id || "",
-    item_name: line.merchandise?.product?.title || "",
-    item_brand: line.merchandise?.product?.vendor || "",
-    item_category: line.merchandise?.product?.productType || "",
-    item_variant: line.merchandise?.title || "",
-    price: Number(line.merchandise?.price?.amount || 0),
-    quantity: Number(line?.quantity || 1),
-    index,
-  }));
-}
-
-function buildItemsFromCheckout(checkout) {
-  if (!checkout?.lineItems) return [];
-  return checkout.lineItems.map((line, index) => ({
-    item_id: line.variant?.sku || line.merchandise?.product?.id || "",
-    item_name: line.variant?.product?.title || "",
-    item_brand: line.variant?.product?.vendor || "",
-    item_category: line.variant?.product?.productType || "",
-    item_variant: line.variant?.title || "",
-    price: Number(line.variant?.price?.amount || 0),
-    quantity: Number(line.quantity || 1),
-    index,
-  }));
-}
-
 /* ---------------------- Page view ---------------------- */
 analytics?.subscribe?.("page_viewed", (event) => {
   dataLayer.push({
@@ -247,28 +187,19 @@ analytics?.subscribe?.("collection_viewed", (event) => {
     ecommerce: {
       item_list_id: collection?.id,
       item_list_name: collection?.title,
-      items: [
-        ...buildItemsFromVariant(
-          collection?.productVariants,
-          collection?.title
-        ),
-      ], // GA4 allows empty array if items are not available
-    },
-  });
-});
-
-/* ---------------------- Product clicked ---------------------- */
-analytics?.subscribe?.("product_clicked", (event) => {
-  if (!hasRequiredData(event?.data, "product_clicked")) return;
-
-  const variant = event?.data?.productVariant;
-
-  dataLayer.push({
-    event: "select_item",
-    ecommerce: {
-      item_list_id: event?.data?.collection?.id,
-      item_list_name: event?.data?.collection?.title,
-      items: [buildItemFromVariant(variant)],
+      items: collection.productVariants
+        ? collection.productVariants.map((variant, index) => ({
+            item_id: variant?.sku || variant?.product?.id || "",
+            item_name: variant?.product?.title || "",
+            item_brand: variant?.product?.vendor || "",
+            item_category: variant?.product?.type || "", // optional, empty is OK
+            item_variant: variant?.title || "",
+            item_list_name: collection?.title,
+            index,
+            price: Number(variant?.price?.amount || 0),
+            quantity: 1,
+          }))
+        : [],
     },
   });
 });
@@ -284,7 +215,18 @@ analytics?.subscribe?.("product_viewed", (event) => {
     ecommerce: {
       currency: variant?.price?.currencyCode,
       value: Number(variant?.price?.amount || 0),
-      items: [buildItemFromVariant(variant)],
+      items: [
+        {
+          item_id: variant.product?.id || "",
+          item_name: variant.product?.title || "",
+          item_brand: variant.product?.vendor || "",
+          item_category: variant.product?.type || "",
+          item_variant: variant?.title || "",
+          price: Number(variant?.price?.amount || 0),
+          quantity: 1,
+          index: 0,
+        },
+      ],
     },
   });
 });
@@ -302,10 +244,10 @@ analytics?.subscribe?.("product_added_to_cart", (event) => {
       value: Number(cartLine?.cost?.totalAmount?.amount || 0),
       items: [
         {
-          item_id: cartLine?.merchandise?.sku || "",
+          item_id: cartLine?.merchandise?.product?.id || "",
           item_name: cartLine?.merchandise?.product?.title || "",
           item_brand: cartLine?.merchandise?.product?.vendor || "",
-          item_category: cartLine?.merchandise?.product?.productType || "",
+          item_category: cartLine?.merchandise?.product?.type || "",
           item_variant: cartLine?.merchandise?.title || "",
           price: Number(cartLine?.merchandise?.price?.amount || 0),
           quantity: Number(cartLine?.quantity || 1),
@@ -327,10 +269,10 @@ analytics?.subscribe?.("product_removed_from_cart", (event) => {
       value: Number(cartLine?.cost?.totalAmount?.amount || 0),
       items: [
         {
-          item_id: cartLine?.merchandise?.sku || "",
+          item_id: cartLine?.merchandise?.product?.id || "",
           item_name: cartLine?.merchandise?.product?.title || "",
           item_brand: cartLine?.merchandise?.product?.vendor || "",
-          item_category: cartLine?.merchandise?.product?.productType || "",
+          item_category: cartLine?.merchandise?.product?.type || "",
           item_variant: cartLine?.merchandise?.title || "",
           price: Number(cartLine?.merchandise?.price?.amount || 0),
           quantity: Number(cartLine?.quantity || 1),
@@ -350,7 +292,18 @@ analytics?.subscribe?.("cart_viewed", (event) => {
     ecommerce: {
       currency: cart?.cost?.totalAmount?.currencyCode,
       value: Number(cart?.cost?.totalAmount?.amount || 0),
-      items: buildItemsFromCart(cart),
+      items: cart.lines
+        ? cart.lines.map((line, index) => ({
+            item_id: line.merchandise?.product?.id || "",
+            item_name: line.merchandise?.product?.title || "",
+            item_brand: line.merchandise?.product?.vendor || "",
+            item_category: line.merchandise?.product?.type || "",
+            item_variant: line.merchandise?.title || "",
+            price: Number(line.merchandise?.price?.amount || 0),
+            quantity: Number(line?.quantity || 1),
+            index,
+          }))
+        : [],
     },
   });
 });
@@ -364,10 +317,21 @@ analytics?.subscribe?.("checkout_started", (event) => {
   dataLayer.push({
     event: "begin_checkout",
     ecommerce: {
-      currency: checkout?.currencyCode,
+      currency: checkout?.totalPrice?.currencyCode || checkout?.currencyCode,
       value: Number(checkout?.totalPrice?.amount || 0),
       coupon: checkout?.discountApplications?.[0]?.code,
-      items: buildItemsFromCheckout(checkout),
+      items: checkout.lineItems
+        ? checkout.lineItems.map((line, index) => ({
+            item_id: line.variant?.sku || line.variant?.product?.id || "",
+            item_name: line.variant?.product?.title || "",
+            item_brand: line.variant?.product?.vendor || "",
+            item_category: line.variant?.product?.type || "",
+            item_variant: line.variant?.title || "",
+            price: Number(line.variant?.price?.amount || 0),
+            quantity: Number(line.quantity || 1),
+            index,
+          }))
+        : [],
     },
   });
 });
@@ -380,10 +344,21 @@ analytics?.subscribe?.("checkout_address_info_submitted", (event) => {
   dataLayer.push({
     event: "add_shipping_info",
     ecommerce: {
-      currency: checkout?.currencyCode,
+      currency: checkout?.totalPrice?.currencyCode || checkout?.currencyCode,
       value: Number(checkout?.totalPrice?.amount || 0),
       shipping_tier: checkout?.shippingLine?.title,
-      items: buildItemsFromCheckout(checkout),
+      items: checkout.lineItems
+        ? checkout.lineItems.map((line, index) => ({
+            item_id: line.variant?.sku || line.variant?.product?.id || "",
+            item_name: line.variant?.product?.title || "",
+            item_brand: line.variant?.product?.vendor || "",
+            item_category: line.variant?.product?.type || "",
+            item_variant: line.variant?.title || "",
+            price: Number(line.variant?.price?.amount || 0),
+            quantity: Number(line.quantity || 1),
+            index,
+          }))
+        : [],
     },
   });
 });
@@ -396,10 +371,21 @@ analytics?.subscribe?.("payment_info_submitted", (event) => {
   dataLayer.push({
     event: "add_payment_info",
     ecommerce: {
-      currency: checkout?.currencyCode,
+      currency: checkout?.totalPrice?.currencyCode || checkout?.currencyCode,
       value: Number(checkout?.totalPrice?.amount || 0),
       payment_type: checkout?.paymentMethod,
-      items: buildItemsFromCheckout(checkout),
+      items: checkout.lineItems
+        ? checkout.lineItems.map((line, index) => ({
+            item_id: line.variant?.sku || line.variant?.product?.id || "",
+            item_name: line.variant?.product?.title || "",
+            item_brand: line.variant?.product?.vendor || "",
+            item_category: line.variant?.product?.type || "",
+            item_variant: line.variant?.title || "",
+            price: Number(line.variant?.price?.amount || 0),
+            quantity: Number(line.quantity || 1),
+            index,
+          }))
+        : [],
     },
   });
 });
@@ -414,12 +400,23 @@ analytics?.subscribe?.("checkout_completed", (event) => {
     ecommerce: {
       transaction_id: checkout?.order?.id || checkout?.token,
       affiliation: "Shopify Store",
-      currency: checkout?.currencyCode,
+      currency: checkout?.totalPrice?.currencyCode || checkout?.currencyCode,
       value: Number(checkout?.totalPrice?.amount || 0),
       tax: Number(checkout?.totalTax?.amount || 0),
       shipping: Number(checkout?.shippingLine?.price?.amount || 0),
       coupon: checkout?.discountApplications?.[0]?.code,
-      items: buildItemsFromCheckout(checkout),
+      items: checkout.lineItems
+        ? checkout.lineItems.map((line, index) => ({
+            item_id: line.variant?.sku || line.variant?.product?.id || "",
+            item_name: line.variant?.product?.title || "",
+            item_brand: line.variant?.product?.vendor || "",
+            item_category: line.variant?.product?.type || "",
+            item_variant: line.variant?.title || "",
+            price: Number(line.variant?.price?.amount || 0),
+            quantity: Number(line.quantity || 1),
+            index,
+          }))
+        : [],
     },
   });
 });
