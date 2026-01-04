@@ -3,6 +3,7 @@
 const IS_PROD =
   init?.context?.document?.location?.hostname?.endsWith(".schiesser.com");
 const ENVIRONMENT = IS_PROD ? "production" : "development";
+const COUNTRY = (init?.data?.shop?.countryCode || "").toLowerCase();
 
 /* ---------------------- Default consent ---------------------- */
 let privacy = {
@@ -26,6 +27,7 @@ if (!IS_PROD) {
     console.groupEnd();
     return originalPush(...args);
   };
+  console.log("[debug] init - event", init);
 }
 
 dataLayer.push({
@@ -172,6 +174,7 @@ analytics?.subscribe?.("page_viewed", (event) => {
     event: "page_view",
     page_location: event?.context?.document?.location?.href,
     page_title: event?.context?.document?.title,
+    country_code: COUNTRY,
     environment: ENVIRONMENT,
   });
 });
