@@ -1,4 +1,4 @@
-/* Version 1.1.2 */
+/* Version 1.1.3 */
 
 const IS_PROD =
   init?.context?.document?.location?.hostname?.endsWith(".schiesser.com");
@@ -7,10 +7,8 @@ const COUNTRY = (init?.data?.shop?.countryCode || "").toLowerCase();
 
 /* ---------------------- Default consent ---------------------- */
 let privacy = {
-  analytics_storage: "denied",
-  ad_storage: "denied",
-  ad_user_data: "denied",
-  ad_personalization: "denied",
+  consent_analytics: false,
+  consent_marketing: false,
 };
 
 /* ---------------------- Initialize dataLayer ---------------------- */
@@ -30,9 +28,21 @@ if (!IS_PROD) {
   console.log("[debug] init - event", init);
 }
 
-dataLayer.push({
+window.dataLayer.push([
+  "consent",
+  "default",
+  {
+    ad_storage: "denied",
+    analytics_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied",
+  },
+]);
+
+window.dataLayer.push({
   event: "consent_default",
-  ...privacy,
+  consent_analytics: privacy.consent_analytics,
+  consent_marketing: privacy.consent_marketing,
 });
 
 /* ---------------------- Handling initial consent ---------------------- */
@@ -40,45 +50,51 @@ if (
   init?.customerPrivacy?.analyticsProcessingAllowed ||
   init?.customerPrivacy?.marketingAllowed
 ) {
-  const analytics_storage = init?.customerPrivacy?.analyticsProcessingAllowed
-    ? "granted"
-    : "denied";
-  const ad_storage = init?.customerPrivacy?.marketingAllowed
-    ? "granted"
-    : "denied";
-
   privacy = {
-    analytics_storage,
-    ad_storage,
-    ad_user_data: ad_storage,
-    ad_personalization: ad_storage,
+    consent_analytics: init?.customerPrivacy?.analyticsProcessingAllowed,
+    consent_marketing: init?.customerPrivacy?.marketingAllowed,
   };
 
-  dataLayer.push({
+  window.dataLayer.push([
+    "consent",
+    "update",
+    {
+      analytics_storage: privacy.consent_analytics ? "granted" : "denied",
+      ad_storage: privacy.consent_marketing ? "granted" : "denied",
+      ad_user_data: privacy.consent_marketing ? "granted" : "denied",
+      ad_personalization: privacy.consent_marketing ? "granted" : "denied",
+    },
+  ]);
+
+  window.dataLayer.push({
     event: "consent_update",
-    ...privacy,
+    consent_analytics: privacy.consent_analytics,
+    consent_marketing: privacy.consent_marketing,
   });
 }
 
 /* ---------------------- Handling consent changes ---------------------- */
 api.customerPrivacy?.subscribe?.("visitorConsentCollected", (event) => {
-  const analytics_storage = event?.customerPrivacy?.analyticsProcessingAllowed
-    ? "granted"
-    : "denied";
-  const ad_storage = event?.customerPrivacy?.marketingAllowed
-    ? "granted"
-    : "denied";
-
   privacy = {
-    analytics_storage,
-    ad_storage,
-    ad_user_data: ad_storage,
-    ad_personalization: ad_storage,
+    consent_analytics: event?.customerPrivacy?.analyticsProcessingAllowed,
+    consent_marketing: event?.customerPrivacy?.marketingAllowed,
   };
 
-  dataLayer.push({
+  window.dataLayer.push([
+    "consent",
+    "update",
+    {
+      analytics_storage: privacy.consent_analytics ? "granted" : "denied",
+      ad_storage: privacy.consent_marketing ? "granted" : "denied",
+      ad_user_data: privacy.consent_marketing ? "granted" : "denied",
+      ad_personalization: privacy.consent_marketing ? "granted" : "denied",
+    },
+  ]);
+
+  window.dataLayer.push({
     event: "consent_update",
-    ...privacy,
+    consent_analytics: privacy.consent_analytics,
+    consent_marketing: privacy.consent_marketing,
   });
 });
 
@@ -109,10 +125,10 @@ function hasRequiredData(data, eventName) {
   }
 
   if (data.hasOwnProperty("productVariant")) {
-    if (
-      !data.productVariant?.price?.amount ||
-      !data.productVariant?.price?.currencyCode
-    ) {
+    const amount = data.productVariant?.price?.amount;
+    const currency = data.productVariant?.price?.currencyCode;
+
+    if (amount == null || currency == null) {
       valid = false;
     }
   }
@@ -131,7 +147,7 @@ function hasRequiredData(data, eventName) {
     const currency = data.cartLine?.cost?.totalAmount?.currencyCode;
     const amount = data.cartLine?.cost?.totalAmount?.amount;
 
-    if (!currency || !amount) {
+    if (currency == null || amount == null) {
       valid = false;
     }
   }
@@ -142,7 +158,7 @@ function hasRequiredData(data, eventName) {
     const currency = data.cart?.cost?.totalAmount?.currencyCode;
     const amount = data.cart?.cost?.totalAmount?.amount;
 
-    if (!hasLines || !currency || !amount) {
+    if (!hasLines || currency == null || amount == null) {
       valid = false;
     }
   }
@@ -154,7 +170,7 @@ function hasRequiredData(data, eventName) {
     const currency = data.checkout?.totalPrice?.currencyCode;
     const amount = data.checkout?.totalPrice?.amount;
 
-    if (!hasLineItems || !currency || !amount) {
+    if (!hasLineItems || currency == null || amount == null) {
       valid = false;
     }
   }
