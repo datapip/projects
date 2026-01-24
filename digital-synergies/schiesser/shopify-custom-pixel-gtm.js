@@ -3,11 +3,11 @@
 const IS_PROD =
   init?.context?.document?.location?.hostname?.endsWith(".schiesser.com");
 const ENVIRONMENT = IS_PROD ? "production" : "development";
-const USER_MAIL = (init?.data?.customer?.email || "").toLowerCase();
-const USER_ID = (init?.data?.customer?.id || "").toLowerCase();
+const USER_MAIL = (init?.data?.customer?.email || "").toLowerCase() || null;
+const USER_ID = (init?.data?.customer?.id || "").toLowerCase() || null;
 const USER_PHONE = init?.data?.customer?.phone || null;
 const USER_ORDERS_COUNT = init?.data?.customer?.ordersCount || null;
-const COUNTRY = (init?.data?.shop?.countryCode || "").toLowerCase();
+const COUNTRY = (init?.data?.shop?.countryCode || "").toLowerCase() || null;
 
 /* ---------------------- Default consent ---------------------- */
 let privacy = {
