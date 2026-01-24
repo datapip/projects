@@ -1,8 +1,12 @@
-/* Version 1.1.3 */
+/* Version 1.1.4 */
 
 const IS_PROD =
   init?.context?.document?.location?.hostname?.endsWith(".schiesser.com");
 const ENVIRONMENT = IS_PROD ? "production" : "development";
+const USER_MAIL = (init?.data?.customer?.email || "").toLowerCase();
+const USER_ID = (init?.data?.customer?.id || "").toLowerCase();
+const USER_PHONE = init?.data?.customer?.phone || null;
+const USER_ORDERS_COUNT = init?.data?.customer?.ordersCount || null;
 const COUNTRY = (init?.data?.shop?.countryCode || "").toLowerCase();
 
 /* ---------------------- Default consent ---------------------- */
@@ -19,7 +23,7 @@ if (!IS_PROD) {
   window.dataLayer.push = function (...args) {
     console.groupCollapsed(
       "[debug] dataLayer.push - event:",
-      args[0]?.event || "unknown"
+      args[0]?.event || "unknown",
     );
     console.log(...args);
     console.groupEnd();
@@ -192,6 +196,10 @@ analytics?.subscribe?.("page_viewed", (event) => {
     page_title: event?.context?.document?.title,
     country_code: COUNTRY,
     environment: ENVIRONMENT,
+    user_email: USER_MAIL,
+    user_id: USER_ID,
+    user_phone: USER_PHONE,
+    user_ordersCount: USER_ORDERS_COUNT,
   });
 });
 
