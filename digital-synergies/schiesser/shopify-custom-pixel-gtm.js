@@ -20,10 +20,20 @@ const userId = (init?.data?.customer?.id || "").toLowerCase() || null;
 const userOrdersCount = init?.data?.customer?.ordersCount || null;
 const shopCountry = (init?.data?.shop?.countryCode || "").toLowerCase() || null;
 
+let userEmailHash = null;
+let userPhoneHash = null;
+let test = null;
 let privacy = {
   consent_analytics: false,
   consent_marketing: false,
 };
+
+/* ---------------------- Hash user data ---------------------- */
+(async () => {
+  userEmailHash = __userEmail ? await sha256(__userEmail) : null;
+  userPhoneHash = __userPhone ? await sha256(__userPhone) : null;
+  test = await sha256("test");
+})();
 
 /* ---------------------- Initialize dataLayer ---------------------- */
 window.dataLayer = window.dataLayer || [];
@@ -39,6 +49,7 @@ if (!isProd) {
     console.groupEnd();
     return originalPush(...args);
   };
+
   console.log("[debug] init - event", init);
 }
 
@@ -203,10 +214,7 @@ function pushError(event, message) {
 }
 
 /* ---------------------- Page view ---------------------- */
-analytics?.subscribe?.("page_viewed", async (event) => {
-  const userEmailHash = __userEmail ? await sha256(__userEmail) : null;
-  const userPhoneHash = __userPhone ? await sha256(__userPhone) : null;
-
+analytics?.subscribe?.("page_viewed", (event) => {
   dataLayer.push({
     event: "page_view",
     page_location: event?.context?.document?.location?.href,
