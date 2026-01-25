@@ -206,10 +206,9 @@ function hasValidItem(items) {
 function pushError(event, message) {
   console.error("[error]", message);
   dataLayer.push({
-    event: "error",
+    event: "datalayer_error",
     error_event: event,
     error_message: message,
-    error_type: "datalayer_error",
   });
 }
 
