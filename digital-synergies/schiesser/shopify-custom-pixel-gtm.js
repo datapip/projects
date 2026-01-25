@@ -674,7 +674,7 @@ analytics?.subscribe?.("checkout_completed", (event) => {
 /* ---------------------- Search ---------------------- */
 analytics?.subscribe?.("search_submitted", (event) => {
   dataLayer.push({
-    event: "search",
+    event: "view_search_results",
     search_term: event?.data?.searchResult?.query || "",
   });
 });
