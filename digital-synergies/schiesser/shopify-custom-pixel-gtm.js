@@ -13,16 +13,19 @@ const isProd = ["www.schiesser.com", "www.schiesser.ch"].includes(
   init?.context?.document?.location?.hostname,
 );
 const env = isProd ? "production" : "development";
+const defaultLanguage = "de";
 
 const __userEmail = (init?.data?.customer?.email || "").toLowerCase() || null;
 const __userPhone = init?.data?.customer?.phone || null;
 const userId = (init?.data?.customer?.id || "").toLowerCase() || null;
 const userOrdersCount = init?.data?.customer?.ordersCount || null;
 const shopCountry = (init?.data?.shop?.countryCode || "").toLowerCase() || null;
+const shopLanguage = getLanguageFromPathname(
+  init?.context?.document?.location?.pathname,
+);
 
 let userEmailHash = null;
 let userPhoneHash = null;
-let test = null;
 let privacy = {
   consent_analytics: false,
   consent_marketing: false,
@@ -32,7 +35,6 @@ let privacy = {
 (async () => {
   userEmailHash = __userEmail ? await sha256(__userEmail) : null;
   userPhoneHash = __userPhone ? await sha256(__userPhone) : null;
-  test = await sha256("test");
 })();
 
 /* ---------------------- Initialize dataLayer ---------------------- */
@@ -218,7 +220,8 @@ analytics?.subscribe?.("page_viewed", (event) => {
     event: "page_view",
     page_location: event?.context?.document?.location?.href,
     page_title: event?.context?.document?.title,
-    country_code: shopCountry,
+    shop_country: shopCountry,
+    shop_language: shopLanguage,
     env: env,
     user_id: userId,
     user_orders_count: userOrdersCount,
@@ -705,6 +708,25 @@ analytics?.subscribe?.("ui_extension_errored", (event) => {
 });
 
 /* ---------------------- Utility functions ---------------------- */
+function getLanguageFromPathname(pathname) {
+  try {
+    if (!pathname || pathname === "/") {
+      return defaultLanguage;
+    }
+
+    const segments = pathname.split("/").filter(Boolean);
+    const firstSegment = segments[0];
+
+    if (/^[a-z]{2}(-[A-Z]{2})?$/.test(firstSegment)) {
+      return firstSegment;
+    }
+
+    return defaultLanguage;
+  } catch (error) {
+    return "";
+  }
+}
+
 async function sha256(text) {
   if (!text) return null;
   const data = new TextEncoder().encode(text);
