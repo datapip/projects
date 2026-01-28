@@ -1,5 +1,5 @@
 /**
- * Version 1.1.5
+ * Version 1.1.6
  *
  * © 2026 datapip.de - Philipp Jaeckle – Custom implementation.
  *
@@ -13,14 +13,18 @@ const isProd = ["www.schiesser.com", "www.schiesser.ch"].includes(
   init?.context?.document?.location?.hostname,
 );
 const env = isProd ? "production" : "development";
-const defaultLanguage = "de";
+const defaultShopLanguage = "de";
 
 const __userEmail = (init?.data?.customer?.email || "").toLowerCase() || null;
 const __userPhone = init?.data?.customer?.phone || null;
 const userId = (init?.data?.customer?.id || "").toLowerCase() || null;
 const userOrdersCount = init?.data?.customer?.ordersCount || null;
+
 const shopCountry = (init?.data?.shop?.countryCode || "").toLowerCase() || null;
 const shopLanguage = getLanguageFromPathname(
+  init?.context?.document?.location?.pathname,
+);
+const pageType = getTypeFromPathname(
   init?.context?.document?.location?.pathname,
 );
 
@@ -220,6 +224,7 @@ analytics?.subscribe?.("page_viewed", (event) => {
     event: "page_view",
     page_location: event?.context?.document?.location?.href,
     page_title: event?.context?.document?.title,
+    page_type: pageType,
     shop_country: shopCountry,
     shop_language: shopLanguage,
     env: env,
@@ -708,23 +713,46 @@ analytics?.subscribe?.("ui_extension_errored", (event) => {
 });
 
 /* ---------------------- Utility functions ---------------------- */
+function isLanguageCode(string) {
+  return /^[a-z]{2}(-[A-Z]{2})?$/.test(string);
+}
+
 function getLanguageFromPathname(pathname) {
-  try {
-    if (!pathname || pathname === "/") {
-      return defaultLanguage;
-    }
-
-    const segments = pathname.split("/").filter(Boolean);
-    const firstSegment = segments[0];
-
-    if (/^[a-z]{2}(-[A-Z]{2})?$/.test(firstSegment)) {
-      return firstSegment;
-    }
-
-    return defaultLanguage;
-  } catch (error) {
-    return "";
+  if (!pathname || pathname === "/") {
+    return defaultShopLanguage;
   }
+
+  const segments = pathname.split("/").filter(Boolean);
+
+  if (isLanguageCode(segments[0])) {
+    return segments[0];
+  }
+
+  return defaultShopLanguage;
+}
+
+function getTypeFromPathname(pathname) {
+  if (!pathname || pathname === "/") {
+    return "home";
+  }
+
+  const lookup = {
+    pages: "page",
+    collections: "collection",
+    products: "product",
+    checkout: "checkout",
+    blogs: "blog",
+    articles: "article",
+    search: "search",
+    cart: "cart",
+    account: "account",
+  };
+
+  const segments = pathname.split("/").filter(Boolean);
+
+  const typeSegment = isLanguageCode(segments[0]) ? segments[1] : segments[0];
+
+  return lookup[typeSegment] || "";
 }
 
 async function sha256(text) {
