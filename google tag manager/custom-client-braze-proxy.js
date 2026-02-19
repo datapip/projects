@@ -52,12 +52,10 @@ const CONFIG = {
 };
 
 // Entry
-
 const path = getRequestPath();
 if (!path) return;
 
 // Router
-
 if (path.indexOf("/web-sdk") === 0 && path.indexOf("braze.min.js") !== -1) {
   claimRequest();
   handleSdk(path);
@@ -67,66 +65,51 @@ if (path.indexOf("/web-sdk") === 0 && path.indexOf("braze.min.js") !== -1) {
 }
 
 // Logic handlers
-
 function handleSdk(path) {
   // Origin validation
-  const origin = getRequestHeader("origin");
-  if (!isAllowedOrigin(origin)) {
+  const referer = getRequestHeader("referer");
+  if (!isAllowedReferer(referer)) {
     return deny(403, "Origin not allowed");
   }
 
   const upstreamUrl = CONFIG.brazeCdnUrl + path;
-
-  sendHttpRequest(upstreamUrl, {
-    method: "GET",
-    timeout: CONFIG.timeoutSdk,
-  })
+  sendHttpRequest(upstreamUrl, { method: "GET", timeout: CONFIG.timeoutSdk })
     .then(handleSdkSuccess)
     .catch(handleFailure);
 }
 
 function handleApi(path) {
   // Setting headers
-
   const origin = getRequestHeader("origin");
   setHeaders(origin);
 
   // Origin validation
-
   if (!isAllowedOrigin(origin)) {
     return deny(403, "Origin not allowed");
   }
 
   // Handle preflight
-
   const method = getRequestMethod();
   if (method === "OPTIONS") {
     return handlePreflight();
   }
 
   // API key validation
-
   const apiKey = getRequestHeader("x-braze-api-key");
   if (!apiKey || !isValidApiKey(apiKey)) {
     return deny(403, "Invalid API key");
   }
 
   // Request preparation
-
   const requestBody = normalizeBody(getRequestBody());
   const targetUrl = buildTargetUrl(path, getRequestQueryString());
   const clientIp = getRemoteAddress();
   const headers = buildForwardHeaders(clientIp);
 
   // Forward request
-
   sendHttpRequest(
     targetUrl,
-    {
-      method: method,
-      headers: headers,
-      timeout: CONFIG.timeoutApi,
-    },
+    { method: method, headers: headers, timeout: CONFIG.timeoutApi },
     requestBody,
   )
     .then(handleApiSuccess)
@@ -134,6 +117,17 @@ function handleApi(path) {
 }
 
 // Helpers
+function isAllowedReferer(referer) {
+  if (!referer) return false;
+  var allowed = false;
+  CONFIG.allowedOrigins.forEach((origin) => {
+    if (origin + "/" === referer) {
+      allowed = true;
+    }
+  });
+  return allowed;
+}
+
 function isAllowedOrigin(origin) {
   if (!origin) return false;
   return CONFIG.allowedOrigins.indexOf(origin) !== -1;
@@ -188,7 +182,6 @@ function handleSdkSuccess(result) {
   if (!result.body || result.statusCode >= 400) {
     return handleFailure();
   }
-
   setResponseHeader("cache-control", "public, max-age=14400");
   setResponseHeader("content-type", "application/javascript");
   setResponseStatus(result.statusCode);
