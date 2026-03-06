@@ -1,5 +1,5 @@
 /**
- * Version 1.1.6
+ * Version 1.2.0
  *
  * © 2026 datapip.de - Philipp Jaeckle – Custom implementation.
  *
@@ -9,7 +9,7 @@
  */
 
 /* ---------------------- Variables ---------------------- */
-const isProd = ["www.schiesser.com", "www.schiesser.ch"].includes(
+const isProd = ["www.example.com", "www.example.ch"].includes(
   init?.context?.document?.location?.hostname,
 );
 const env = isProd ? "production" : "development";
@@ -17,7 +17,7 @@ const defaultShopLanguage = "de";
 
 const __userEmail = (init?.data?.customer?.email || "").toLowerCase() || null;
 const __userPhone = init?.data?.customer?.phone || null;
-const userId = (init?.data?.customer?.id || "").toLowerCase() || null;
+const userId = init?.data?.customer?.id || null;
 const userOrdersCount = init?.data?.customer?.ordersCount || null;
 
 const shopCountry = (init?.data?.shop?.countryCode || "").toLowerCase() || null;
@@ -36,7 +36,7 @@ let privacy = {
 };
 
 /* ---------------------- Hash user data ---------------------- */
-(async () => {
+const hashesReady = (async () => {
   userEmailHash = __userEmail ? await sha256(__userEmail) : null;
   userPhoneHash = __userPhone ? await sha256(__userPhone) : null;
 })();
@@ -219,7 +219,9 @@ function pushError(event, message) {
 }
 
 /* ---------------------- Page view ---------------------- */
-analytics?.subscribe?.("page_viewed", (event) => {
+analytics?.subscribe?.("page_viewed", async (event) => {
+  await hashesReady;
+
   dataLayer.push({
     event: "page_view",
     page_location: event?.context?.document?.location?.href,
@@ -239,6 +241,8 @@ analytics?.subscribe?.("page_viewed", (event) => {
 
 /* ---------------------- Collection view ---------------------- */
 analytics?.subscribe?.("collection_viewed", (event) => {
+  flushEcommerce();
+
   const ga4_event_name = "view_item_list";
 
   const collection = event?.data?.collection;
@@ -254,11 +258,13 @@ analytics?.subscribe?.("collection_viewed", (event) => {
     item_list_name: collection?.title,
     items: collection.productVariants
       ? collection.productVariants.map((variant, index) => ({
-          item_id: variant?.sku || variant?.product?.id || "",
+          item_id: normalizeId(
+            variant?.sku || variant?.id || variant?.product?.id,
+          ),
           item_name: variant?.product?.title || "",
           affiliation: "",
           coupon: "",
-          discount: "",
+          discount: 0,
           index,
           item_brand: variant?.product?.vendor || "",
           item_category: variant?.product?.type || "",
@@ -288,6 +294,8 @@ analytics?.subscribe?.("collection_viewed", (event) => {
 
 /* ---------------------- Product viewed ---------------------- */
 analytics?.subscribe?.("product_viewed", (event) => {
+  flushEcommerce();
+
   const ga4_event_name = "view_item";
 
   const variant = event?.data?.productVariant;
@@ -302,11 +310,13 @@ analytics?.subscribe?.("product_viewed", (event) => {
     value: Number(variant?.price?.amount || 0),
     items: [
       {
-        item_id: variant.product?.id || "",
+        item_id: normalizeId(
+          variant?.sku || variant?.id || variant?.product?.id,
+        ),
         item_name: variant.product?.title || "",
         affiliation: "",
         coupon: "",
-        discount: "",
+        discount: 0,
         index: 0,
         item_brand: variant.product?.vendor || "",
         item_category: variant.product?.type || "",
@@ -336,6 +346,8 @@ analytics?.subscribe?.("product_viewed", (event) => {
 
 /* ---------------------- Cart actions ---------------------- */
 analytics?.subscribe?.("product_added_to_cart", (event) => {
+  flushEcommerce();
+
   const ga4_event_name = "add_to_cart";
 
   const cartLine = event?.data?.cartLine;
@@ -350,11 +362,15 @@ analytics?.subscribe?.("product_added_to_cart", (event) => {
     value: Number(cartLine?.cost?.totalAmount?.amount || 0),
     items: [
       {
-        item_id: cartLine?.merchandise?.product?.id || "",
+        item_id: normalizeId(
+          cartLine?.merchandise?.sku ||
+            cartLine?.merchandise?.id ||
+            cartLine?.merchandise?.product?.id,
+        ),
         item_name: cartLine?.merchandise?.product?.title || "",
         affiliation: "",
         coupon: "",
-        discount: "",
+        discount: 0,
         index: 0,
         item_brand: cartLine?.merchandise?.product?.vendor || "",
         item_category: cartLine?.merchandise?.product?.type || "",
@@ -383,6 +399,8 @@ analytics?.subscribe?.("product_added_to_cart", (event) => {
 });
 
 analytics?.subscribe?.("product_removed_from_cart", (event) => {
+  flushEcommerce();
+
   const ga4_event_name = "remove_from_cart";
 
   const cartLine = event?.data?.cartLine;
@@ -397,11 +415,15 @@ analytics?.subscribe?.("product_removed_from_cart", (event) => {
     value: Number(cartLine?.cost?.totalAmount?.amount || 0),
     items: [
       {
-        item_id: cartLine?.merchandise?.product?.id || "",
+        item_id: normalizeId(
+          cartLine?.merchandise?.sku ||
+            cartLine?.merchandise?.id ||
+            cartLine?.merchandise?.product?.id,
+        ),
         item_name: cartLine?.merchandise?.product?.title || "",
         affiliation: "",
         coupon: "",
-        discount: "",
+        discount: 0,
         index: 0,
         item_brand: cartLine?.merchandise?.product?.vendor || "",
         item_category: cartLine?.merchandise?.product?.type || "",
@@ -430,6 +452,8 @@ analytics?.subscribe?.("product_removed_from_cart", (event) => {
 });
 
 analytics?.subscribe?.("cart_viewed", (event) => {
+  flushEcommerce();
+
   const ga4_event_name = "view_cart";
 
   const cart = event?.data?.cart;
@@ -444,11 +468,15 @@ analytics?.subscribe?.("cart_viewed", (event) => {
     value: Number(cart?.cost?.totalAmount?.amount || 0),
     items: cart.lines
       ? cart.lines.map((line, index) => ({
-          item_id: line.merchandise?.product?.id || "",
+          item_id: normalizeId(
+            line.merchandise?.sku ||
+              line.merchandise?.id ||
+              line.merchandise?.product?.id,
+          ),
           item_name: line.merchandise?.product?.title || "",
           affiliation: "",
           coupon: "",
-          discount: "",
+          discount: 0,
           index,
           item_brand: line.merchandise?.product?.vendor || "",
           item_category: line.merchandise?.product?.type || "",
@@ -478,6 +506,8 @@ analytics?.subscribe?.("cart_viewed", (event) => {
 
 /* ---------------------- Checkout ---------------------- */
 analytics?.subscribe?.("checkout_started", (event) => {
+  flushEcommerce();
+
   const ga4_event_name = "begin_checkout";
 
   const checkout = event?.data?.checkout;
@@ -490,14 +520,16 @@ analytics?.subscribe?.("checkout_started", (event) => {
   const ga4_ecommerce_object = {
     currency: checkout?.totalPrice?.currencyCode || checkout?.currencyCode,
     value: Number(checkout?.totalPrice?.amount || 0),
-    coupon: checkout?.discountApplications?.[0]?.code,
+    coupon: checkout?.discountApplications?.[0]?.title || "",
     items: checkout?.lineItems
       ? checkout.lineItems.map((line, index) => ({
-          item_id: line.variant?.sku || line.variant?.product?.id || "",
+          item_id: normalizeId(
+            line.variant?.sku || line.variant?.id || line.variant?.product?.id,
+          ),
           item_name: line.variant?.product?.title || "",
           affiliation: "",
           coupon: "",
-          discount: "",
+          discount: 0,
           index,
           item_brand: line.variant?.product?.vendor || "",
           item_category: line.variant?.product?.type || "",
@@ -526,6 +558,8 @@ analytics?.subscribe?.("checkout_started", (event) => {
 });
 
 analytics?.subscribe?.("checkout_address_info_submitted", (event) => {
+  flushEcommerce();
+
   const ga4_event_name = "add_shipping_info";
 
   const checkout = event?.data?.checkout;
@@ -542,12 +576,14 @@ analytics?.subscribe?.("checkout_address_info_submitted", (event) => {
     shipping_tier: checkout?.delivery?.selectedDeliveryOptions?.type,
     items: checkout?.lineItems
       ? checkout.lineItems.map((line, index) => ({
-          item_id: line.variant?.sku || line.variant?.product?.id || "",
+          item_id: normalizeId(
+            line.variant?.sku || line.variant?.id || line.variant?.product?.id,
+          ),
           item_name: line.variant?.product?.title || "",
           affiliation: "",
           coupon:
             line.discountAllocations?.[0]?.discountApplication?.title || "",
-          discount: line.discountAllocations?.[0]?.amount?.amount || 0,
+          discount: Number(line.discountAllocations?.[0]?.amount?.amount || 0),
           index,
           item_brand: line.variant?.product?.vendor || "",
           item_category: line.variant?.product?.type || "",
@@ -576,6 +612,8 @@ analytics?.subscribe?.("checkout_address_info_submitted", (event) => {
 });
 
 analytics?.subscribe?.("payment_info_submitted", (event) => {
+  flushEcommerce();
+
   const ga4_event_name = "add_payment_info";
 
   const checkout = event?.data?.checkout;
@@ -592,12 +630,14 @@ analytics?.subscribe?.("payment_info_submitted", (event) => {
     payment_type: String(checkout?.paymentMethod || ""),
     items: checkout?.lineItems
       ? checkout.lineItems.map((line, index) => ({
-          item_id: line.variant?.sku || line.variant?.product?.id || "",
+          item_id: normalizeId(
+            line.variant?.sku || line.variant?.id || line.variant?.product?.id,
+          ),
           item_name: line.variant?.product?.title || "",
           affiliation: "",
           coupon:
             line.discountAllocations?.[0]?.discountApplication?.title || "",
-          discount: line.discountAllocations?.[0]?.amount?.amount || 0,
+          discount: Number(line.discountAllocations?.[0]?.amount?.amount || 0),
           index,
           item_brand: line.variant?.product?.vendor || "",
           item_category: line.variant?.product?.type || "",
@@ -626,6 +666,8 @@ analytics?.subscribe?.("payment_info_submitted", (event) => {
 });
 
 analytics?.subscribe?.("checkout_completed", (event) => {
+  flushEcommerce();
+
   const ga4_event_name = "purchase";
 
   const checkout = event?.data?.checkout;
@@ -640,18 +682,20 @@ analytics?.subscribe?.("checkout_completed", (event) => {
     value: Number(checkout?.totalPrice?.amount || 0),
     customer_type:
       checkout?.order?.customer?.isFirstOrder === false ? "returning" : "new",
-    transaction_id: checkout?.order?.id || checkout?.token,
-    coupon: checkout?.discountApplications?.[0]?.title,
+    transaction_id: normalizeId(checkout?.order?.id) || checkout?.token,
+    coupon: checkout?.discountApplications?.[0]?.title || "",
     shipping: Number(checkout?.shippingLine?.price?.amount || 0),
     tax: Number(checkout?.totalTax?.amount || 0),
     items: checkout?.lineItems
       ? checkout.lineItems.map((line, index) => ({
-          item_id: line.variant?.sku || line.variant?.product?.id || "",
+          item_id: normalizeId(
+            line.variant?.sku || line.variant?.id || line.variant?.product?.id,
+          ),
           item_name: line.variant?.product?.title || "",
           affiliation: "",
           coupon:
             line.discountAllocations?.[0]?.discountApplication?.title || "",
-          discount: line.discountAllocations?.[0]?.amount?.amount || 0,
+          discount: Number(line.discountAllocations?.[0]?.amount?.amount || 0),
           index,
           item_brand: line.variant?.product?.vendor || "",
           item_category: line.variant?.product?.type || "",
@@ -752,7 +796,15 @@ function getTypeFromPathname(pathname) {
 
   const typeSegment = isLanguageCode(segments[0]) ? segments[1] : segments[0];
 
-  return lookup[typeSegment] || "";
+  return lookup[typeSegment] || "other";
+}
+
+function normalizeId(gid) {
+  return gid ? gid.split("/").pop() : "";
+}
+
+function flushEcommerce() {
+  dataLayer.push({ ecommerce: null });
 }
 
 async function sha256(text) {
