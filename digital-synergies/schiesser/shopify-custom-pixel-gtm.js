@@ -258,9 +258,7 @@ analytics?.subscribe?.("collection_viewed", (event) => {
     item_list_name: collection?.title,
     items: collection.productVariants
       ? collection.productVariants.map((variant, index) => ({
-          item_id: normalizeId(
-            variant?.sku || variant?.id || variant?.product?.id,
-          ),
+          item_id: variant?.sku || variant?.id || variant?.product?.id || "",
           item_name: variant?.product?.title || "",
           affiliation: "",
           coupon: "",
@@ -310,9 +308,7 @@ analytics?.subscribe?.("product_viewed", (event) => {
     value: Number(variant?.price?.amount || 0),
     items: [
       {
-        item_id: normalizeId(
-          variant?.sku || variant?.id || variant?.product?.id,
-        ),
+        item_id: variant?.sku || variant?.id || variant?.product?.id || "",
         item_name: variant.product?.title || "",
         affiliation: "",
         coupon: "",
@@ -362,11 +358,11 @@ analytics?.subscribe?.("product_added_to_cart", (event) => {
     value: Number(cartLine?.cost?.totalAmount?.amount || 0),
     items: [
       {
-        item_id: normalizeId(
+        item_id:
           cartLine?.merchandise?.sku ||
-            cartLine?.merchandise?.id ||
-            cartLine?.merchandise?.product?.id,
-        ),
+          cartLine?.merchandise?.id ||
+          cartLine?.merchandise?.product?.id ||
+          "",
         item_name: cartLine?.merchandise?.product?.title || "",
         affiliation: "",
         coupon: "",
@@ -415,11 +411,11 @@ analytics?.subscribe?.("product_removed_from_cart", (event) => {
     value: Number(cartLine?.cost?.totalAmount?.amount || 0),
     items: [
       {
-        item_id: normalizeId(
+        item_id:
           cartLine?.merchandise?.sku ||
-            cartLine?.merchandise?.id ||
-            cartLine?.merchandise?.product?.id,
-        ),
+          cartLine?.merchandise?.id ||
+          cartLine?.merchandise?.product?.id ||
+          "",
         item_name: cartLine?.merchandise?.product?.title || "",
         affiliation: "",
         coupon: "",
@@ -468,11 +464,11 @@ analytics?.subscribe?.("cart_viewed", (event) => {
     value: Number(cart?.cost?.totalAmount?.amount || 0),
     items: cart.lines
       ? cart.lines.map((line, index) => ({
-          item_id: normalizeId(
+          item_id:
             line.merchandise?.sku ||
-              line.merchandise?.id ||
-              line.merchandise?.product?.id,
-          ),
+            line.merchandise?.id ||
+            line.merchandise?.product?.id ||
+            "",
           item_name: line.merchandise?.product?.title || "",
           affiliation: "",
           coupon: "",
@@ -523,9 +519,11 @@ analytics?.subscribe?.("checkout_started", (event) => {
     coupon: checkout?.discountApplications?.[0]?.title || "",
     items: checkout?.lineItems
       ? checkout.lineItems.map((line, index) => ({
-          item_id: normalizeId(
-            line.variant?.sku || line.variant?.id || line.variant?.product?.id,
-          ),
+          item_id:
+            line.variant?.sku ||
+            line.variant?.id ||
+            line.variant?.product?.id ||
+            "",
           item_name: line.variant?.product?.title || "",
           affiliation: "",
           coupon: "",
@@ -576,9 +574,11 @@ analytics?.subscribe?.("checkout_address_info_submitted", (event) => {
     shipping_tier: checkout?.delivery?.selectedDeliveryOptions?.type,
     items: checkout?.lineItems
       ? checkout.lineItems.map((line, index) => ({
-          item_id: normalizeId(
-            line.variant?.sku || line.variant?.id || line.variant?.product?.id,
-          ),
+          item_id:
+            line.variant?.sku ||
+            line.variant?.id ||
+            line.variant?.product?.id ||
+            "",
           item_name: line.variant?.product?.title || "",
           affiliation: "",
           coupon:
@@ -630,9 +630,11 @@ analytics?.subscribe?.("payment_info_submitted", (event) => {
     payment_type: String(checkout?.paymentMethod || ""),
     items: checkout?.lineItems
       ? checkout.lineItems.map((line, index) => ({
-          item_id: normalizeId(
-            line.variant?.sku || line.variant?.id || line.variant?.product?.id,
-          ),
+          item_id:
+            line.variant?.sku ||
+            line.variant?.id ||
+            line.variant?.product?.id ||
+            "",
           item_name: line.variant?.product?.title || "",
           affiliation: "",
           coupon:
@@ -682,15 +684,17 @@ analytics?.subscribe?.("checkout_completed", (event) => {
     value: Number(checkout?.totalPrice?.amount || 0),
     customer_type:
       checkout?.order?.customer?.isFirstOrder === false ? "returning" : "new",
-    transaction_id: normalizeId(checkout?.order?.id) || checkout?.token,
+    transaction_id: checkout?.order?.id || checkout?.token,
     coupon: checkout?.discountApplications?.[0]?.title || "",
     shipping: Number(checkout?.shippingLine?.price?.amount || 0),
     tax: Number(checkout?.totalTax?.amount || 0),
     items: checkout?.lineItems
       ? checkout.lineItems.map((line, index) => ({
-          item_id: normalizeId(
-            line.variant?.sku || line.variant?.id || line.variant?.product?.id,
-          ),
+          item_id:
+            line.variant?.sku ||
+            line.variant?.id ||
+            line.variant?.product?.id ||
+            "",
           item_name: line.variant?.product?.title || "",
           affiliation: "",
           coupon:
@@ -797,10 +801,6 @@ function getTypeFromPathname(pathname) {
   const typeSegment = isLanguageCode(segments[0]) ? segments[1] : segments[0];
 
   return lookup[typeSegment] || "other";
-}
-
-function normalizeId(gid) {
-  return gid ? gid.split("/").pop() : "";
 }
 
 function flushEcommerce() {
