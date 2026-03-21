@@ -1,5 +1,5 @@
 /**
- * Version 1.3.0
+ * Version 1.4.0
  *
  * © 2026 datapip.de - Philipp Jaeckle – Custom implementation.
  *
@@ -10,6 +10,7 @@
 
 /* ---------------------- Variables ---------------------- */
 let gtmLoaded = false;
+let pendingEvents = [];
 const isProd = ["www.example.com", "www.example.ch"].includes(
   init?.context?.document?.location?.hostname,
 );
@@ -44,6 +45,9 @@ const hashesReady = (async () => {
 
 /* ---------------------- Initialize dataLayer ---------------------- */
 window.dataLayer = window.dataLayer || [];
+window.gtag = function () {
+  window.dataLayer.push(arguments);
+};
 
 if (!isProd) {
   const originalPush = window.dataLayer.push.bind(window.dataLayer);
@@ -60,16 +64,12 @@ if (!isProd) {
   console.log("[debug] init - event", init);
 }
 
-window.dataLayer.push([
-  "consent",
-  "default",
-  {
-    ad_storage: "denied",
-    analytics_storage: "denied",
-    ad_user_data: "denied",
-    ad_personalization: "denied",
-  },
-]);
+gtag("consent", "default", {
+  ad_storage: "denied",
+  analytics_storage: "denied",
+  ad_user_data: "denied",
+  ad_personalization: "denied",
+});
 
 window.dataLayer.push({
   event: "consent_default",
@@ -87,16 +87,12 @@ if (
     consent_marketing: init?.customerPrivacy?.marketingAllowed,
   };
 
-  window.dataLayer.push([
-    "consent",
-    "update",
-    {
-      analytics_storage: privacy.consent_analytics ? "granted" : "denied",
-      ad_storage: privacy.consent_marketing ? "granted" : "denied",
-      ad_user_data: privacy.consent_marketing ? "granted" : "denied",
-      ad_personalization: privacy.consent_marketing ? "granted" : "denied",
-    },
-  ]);
+  gtag("consent", "update", {
+    analytics_storage: privacy.consent_analytics ? "granted" : "denied",
+    ad_storage: privacy.consent_marketing ? "granted" : "denied",
+    ad_user_data: privacy.consent_marketing ? "granted" : "denied",
+    ad_personalization: privacy.consent_marketing ? "granted" : "denied",
+  });
 
   window.dataLayer.push({
     event: "consent_update",
@@ -116,16 +112,12 @@ api.customerPrivacy?.subscribe?.("visitorConsentCollected", (event) => {
     consent_marketing: event?.customerPrivacy?.marketingAllowed,
   };
 
-  window.dataLayer.push([
-    "consent",
-    "update",
-    {
-      analytics_storage: privacy.consent_analytics ? "granted" : "denied",
-      ad_storage: privacy.consent_marketing ? "granted" : "denied",
-      ad_user_data: privacy.consent_marketing ? "granted" : "denied",
-      ad_personalization: privacy.consent_marketing ? "granted" : "denied",
-    },
-  ]);
+  gtag("consent", "update", {
+    analytics_storage: privacy.consent_analytics ? "granted" : "denied",
+    ad_storage: privacy.consent_marketing ? "granted" : "denied",
+    ad_user_data: privacy.consent_marketing ? "granted" : "denied",
+    ad_personalization: privacy.consent_marketing ? "granted" : "denied",
+  });
 
   window.dataLayer.push({
     event: "consent_update",
@@ -158,6 +150,9 @@ function loadGTM() {
         : "&gtm_auth=QKY8WHHpfGJxmAMhJP4-Wg&gtm_preview=env-3&gtm_cookies_win=x");
     f?.parentNode?.insertBefore(j, f);
   })(window, document, "script", "dataLayer", "GTM-K7Q2BTR2");
+
+  pendingEvents.forEach((data) => dataLayer.push(data));
+  pendingEvents = [];
 }
 
 /* ---------------------- Validation functions ---------------------- */
@@ -224,7 +219,7 @@ function hasValidItem(items) {
 
 function pushError(event, message) {
   console.error("[error]", message);
-  dataLayer.push({
+  pushEvent({
     event: "datalayer_error",
     error_event: event,
     error_message: message,
@@ -235,7 +230,7 @@ function pushError(event, message) {
 analytics?.subscribe?.("page_viewed", async (event) => {
   await hashesReady;
 
-  dataLayer.push({
+  pushEvent({
     event: "page_view",
     page_location: event?.context?.document?.location?.href,
     page_title: event?.context?.document?.title,
@@ -297,7 +292,7 @@ analytics?.subscribe?.("collection_viewed", (event) => {
     return;
   }
 
-  dataLayer.push({
+  pushEvent({
     event: ga4_event_name,
     ecommerce: ga4_ecommerce_object,
   });
@@ -347,7 +342,7 @@ analytics?.subscribe?.("product_viewed", (event) => {
     return;
   }
 
-  dataLayer.push({
+  pushEvent({
     event: ga4_event_name,
     ecommerce: ga4_ecommerce_object,
   });
@@ -401,7 +396,7 @@ analytics?.subscribe?.("product_added_to_cart", (event) => {
     return;
   }
 
-  dataLayer.push({
+  pushEvent({
     event: ga4_event_name,
     ecommerce: ga4_ecommerce_object,
   });
@@ -454,7 +449,7 @@ analytics?.subscribe?.("product_removed_from_cart", (event) => {
     return;
   }
 
-  dataLayer.push({
+  pushEvent({
     event: ga4_event_name,
     ecommerce: ga4_ecommerce_object,
   });
@@ -507,7 +502,7 @@ analytics?.subscribe?.("cart_viewed", (event) => {
     return;
   }
 
-  dataLayer.push({
+  pushEvent({
     event: ga4_event_name,
     ecommerce: ga4_ecommerce_object,
   });
@@ -562,7 +557,7 @@ analytics?.subscribe?.("checkout_started", (event) => {
     return;
   }
 
-  dataLayer.push({
+  pushEvent({
     event: ga4_event_name,
     ecommerce: ga4_ecommerce_object,
   });
@@ -618,7 +613,7 @@ analytics?.subscribe?.("checkout_address_info_submitted", (event) => {
     return;
   }
 
-  dataLayer.push({
+  pushEvent({
     event: ga4_event_name,
     ecommerce: ga4_ecommerce_object,
   });
@@ -674,7 +669,7 @@ analytics?.subscribe?.("payment_info_submitted", (event) => {
     return;
   }
 
-  dataLayer.push({
+  pushEvent({
     event: ga4_event_name,
     ecommerce: ga4_ecommerce_object,
   });
@@ -734,7 +729,7 @@ analytics?.subscribe?.("checkout_completed", (event) => {
     return;
   }
 
-  dataLayer.push({
+  pushEvent({
     event: ga4_event_name,
     ecommerce: ga4_ecommerce_object,
   });
@@ -742,7 +737,7 @@ analytics?.subscribe?.("checkout_completed", (event) => {
 
 /* ---------------------- Search ---------------------- */
 analytics?.subscribe?.("search_submitted", (event) => {
-  dataLayer.push({
+  pushEvent({
     event: "search",
     search_term: event?.data?.searchResult?.query || "",
   });
@@ -750,7 +745,7 @@ analytics?.subscribe?.("search_submitted", (event) => {
 
 /* ---------------------- shopify alerts ---------------------- */
 analytics?.subscribe?.("alert_displayed", (event) => {
-  dataLayer.push({
+  pushEvent({
     event: "alert_displayed",
     alert_message: event?.data?.alert?.message,
     alert_target: event?.data?.alert?.target,
@@ -761,7 +756,7 @@ analytics?.subscribe?.("alert_displayed", (event) => {
 
 /* ---------------------- shopify errors ---------------------- */
 analytics?.subscribe?.("ui_extension_errored", (event) => {
-  dataLayer.push({
+  pushEvent({
     event: "ui_extension_errored",
     error_app_id: event?.data?.error?.appId,
     error_app_name: event?.data?.error?.appName,
@@ -817,7 +812,15 @@ function getTypeFromPathname(pathname) {
 }
 
 function flushEcommerce() {
-  dataLayer.push({ ecommerce: null });
+  pushEvent({ ecommerce: null });
+}
+
+function pushEvent(data) {
+  if (gtmLoaded) {
+    dataLayer.push(data);
+  } else {
+    pendingEvents.push(data);
+  }
 }
 
 async function sha256(text) {
