@@ -9,6 +9,7 @@
  */
 
 /* ---------------------- Variables ---------------------- */
+let gtmLoaded = false;
 const isProd = ["www.example.com", "www.example.ch"].includes(
   init?.context?.document?.location?.hostname,
 );
@@ -138,8 +139,6 @@ api.customerPrivacy?.subscribe?.("visitorConsentCollected", (event) => {
 });
 
 /* ---------------------- Load GTM ---------------------- */
-let gtmLoaded = false;
-
 function loadGTM() {
   if (gtmLoaded) return;
   gtmLoaded = true;
