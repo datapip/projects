@@ -1,5 +1,5 @@
 /**
- * Version 1.2.0
+ * Version 1.3.0
  *
  * © 2026 datapip.de - Philipp Jaeckle – Custom implementation.
  *
