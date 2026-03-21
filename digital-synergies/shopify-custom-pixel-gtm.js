@@ -102,6 +102,10 @@ if (
     consent_analytics: privacy.consent_analytics,
     consent_marketing: privacy.consent_marketing,
   });
+
+  if (privacy.consent_analytics || privacy.consent_marketing) {
+    loadGTM();
+  }
 }
 
 /* ---------------------- Handling consent changes ---------------------- */
@@ -127,25 +131,35 @@ api.customerPrivacy?.subscribe?.("visitorConsentCollected", (event) => {
     consent_analytics: privacy.consent_analytics,
     consent_marketing: privacy.consent_marketing,
   });
+
+  if (privacy.consent_analytics || privacy.consent_marketing) {
+    loadGTM();
+  }
 });
 
 /* ---------------------- Load GTM ---------------------- */
-(function (w, d, s, l, i) {
-  w[l] = w[l] || [];
-  w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-  var f = d.getElementsByTagName(s)[0],
-    j = d.createElement(s),
-    dl = l != "dataLayer" ? "&l=" + l : "";
-  j.async = true;
-  j.src =
-    "https://www.googletagmanager.com/gtm.js?id=" +
-    i +
-    dl +
-    (isProd
-      ? ""
-      : "&gtm_auth=QKY8WHHpfGJxmAMhJP4-Wg&gtm_preview=env-3&gtm_cookies_win=x");
-  f?.parentNode?.insertBefore(j, f);
-})(window, document, "script", "dataLayer", "GTM-K7Q2BTR2");
+let gtmLoaded = false;
+
+function loadGTM() {
+  if (gtmLoaded) return;
+  gtmLoaded = true;
+  (function (w, d, s, l, i) {
+    w[l] = w[l] || [];
+    w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+    var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s),
+      dl = l != "dataLayer" ? "&l=" + l : "";
+    j.async = true;
+    j.src =
+      "https://www.googletagmanager.com/gtm.js?id=" +
+      i +
+      dl +
+      (isProd
+        ? ""
+        : "&gtm_auth=QKY8WHHpfGJxmAMhJP4-Wg&gtm_preview=env-3&gtm_cookies_win=x");
+    f?.parentNode?.insertBefore(j, f);
+  })(window, document, "script", "dataLayer", "GTM-K7Q2BTR2");
+}
 
 /* ---------------------- Validation functions ---------------------- */
 function isValidEcommerce(event, ecommerce) {
