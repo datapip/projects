@@ -10,7 +10,7 @@
 
 /* ---------------------- Variables ---------------------- */
 let gtmLoaded = false;
-let pendingEvents = [];
+let previousEvents = [];
 const isProd = ["www.example.com", "www.example.ch"].includes(
   init?.context?.document?.location?.hostname,
 );
@@ -151,8 +151,8 @@ function loadGTM() {
     f?.parentNode?.insertBefore(j, f);
   })(window, document, "script", "dataLayer", "GTM-K7Q2BTR2");
 
-  pendingEvents.forEach((data) => dataLayer.push(data));
-  pendingEvents = [];
+  previousEvents.forEach((data) => dataLayer.push(data));
+  previousEvents = [];
 }
 
 /* ---------------------- Validation functions ---------------------- */
@@ -819,7 +819,7 @@ function pushEvent(data) {
   if (gtmLoaded) {
     dataLayer.push(data);
   } else {
-    pendingEvents.push(data);
+    previousEvents.push(data);
   }
 }
 
