@@ -3,19 +3,22 @@
  * Emarsys Email Capture — GTM Custom HTML Tag
  * Client: schiesser.com
  *
- * Persists the user's email under key "em_e" in sessionStorage and as a
- * session cookie — ready for the main Emarsys tag to read via getEmail().
+ * Persists the user's email under key "em_e" in localStorage and as a
+ * persistent cookie (30-day expiry) — ready for the main Emarsys tag to read
+ * via getEmail().
  *
- * Two capture strategies:
- *   1. DOM Ready scan — catches browser autofill / password manager pre-fill
- *   2. blur listener  — catches manual entry when the user leaves the field
+ * Three capture strategies:
+ *   1. Immediate scan      — runs on tag execution, catches pre-filled values
+ *   2. Window load scan    — re-runs after full page load for late autofill
+ *   3. blur listener       — catches manual entry when the user leaves the field
  *
- * Covered inputs (name="lgn_usr" or name="editval[oxuser__oxusername]"):
+ * Covered inputs (name="lgn_usr", name="editval[oxuser__oxusername]", or type="email"):
  *   - Login page            #lgn_user       name="lgn_usr"
  *   - Registration          #email          name="lgn_usr"
  *   - Checkout (existing)   #username       name="lgn_usr"
  *   - Checkout (new/guest)  #email          name="lgn_usr"
  *   - Newsletter            #email_footer   name="editval[oxuser__oxusername]"
+ *   - Any input             type="email"
  *
  * GTM Trigger: DOM Ready — All Pages
  */
