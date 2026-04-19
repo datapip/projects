@@ -15,7 +15,9 @@ const isProd = ["www.example.com", "www.example.ch"].includes(
   init?.context?.document?.location?.hostname,
 );
 const env = isProd ? "production" : "development";
+const customEndpointGTM = "sst.example.com";
 const defaultShopLanguage = "de";
+const redactGoogleAds = true;
 
 const __userEmail = (init?.data?.customer?.email || "").toLowerCase() || null;
 const __userPhone = init?.data?.customer?.phone || null;
@@ -70,6 +72,10 @@ gtag("consent", "default", {
   ad_user_data: "denied",
   ad_personalization: "denied",
 });
+
+if (redactGoogleAds) {
+  gtag("set", "ads_data_redaction", true);
+}
 
 window.dataLayer.push({
   event: "consent_default",
@@ -142,7 +148,9 @@ function loadGTM() {
       dl = l != "dataLayer" ? "&l=" + l : "";
     j.async = true;
     j.src =
-      "https://www.googletagmanager.com/gtm.js?id=" +
+      "https://" +
+      (customEndpointGTM ? customEndpointGTM : "www.googletagmanager.com") +
+      "/gtm.js?id=" +
       i +
       dl +
       (isProd
