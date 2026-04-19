@@ -5,7 +5,6 @@ const getRequestQueryString = require("getRequestQueryString");
 const getClientName = require("getClientName");
 const getContainerVersion = require("getContainerVersion");
 const logToConsole = require("logToConsole");
-const JSON = require("JSON");
 
 const eventData = getAllEventData();
 const containerData = getContainerVersion();
