@@ -1,0 +1,311 @@
+{
+    "exportFormatVersion": 2,
+    "exportTime": "2026-04-19 08:22:04",
+    "containerVersion": {
+        "path": "accounts/28432412/containers/247403105/versions/0",
+        "accountId": "28432412",
+        "containerId": "247403105",
+        "containerVersionId": "0",
+        "container": {
+            "path": "accounts/28432412/containers/247403105",
+            "accountId": "28432412",
+            "containerId": "247403105",
+            "name": "Schiesser AG - Shopify (SST)",
+            "publicId": "GTM-P7DCPB6M",
+            "usageContext": [
+                "SERVER"
+            ],
+            "fingerprint": "1776431898662",
+            "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/28432412/containers/247403105/workspaces?apiLink=container",
+            "features": {
+                "supportUserPermissions": true,
+                "supportEnvironments": true,
+                "supportWorkspaces": true,
+                "supportGtagConfigs": false,
+                "supportBuiltInVariables": true,
+                "supportClients": true,
+                "supportFolders": true,
+                "supportTags": true,
+                "supportTemplates": true,
+                "supportTriggers": true,
+                "supportVariables": true,
+                "supportVersions": true,
+                "supportZones": true,
+                "supportTransformations": true
+            },
+            "tagIds": [
+                "GTM-P7DCPB6M"
+            ],
+            "taggingServerUrls": [
+                "https://ds.schiesser.com"
+            ]
+        },
+        "tag": [
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "tagId": "4",
+                "name": "GA4 All Events",
+                "type": "sgtmgaaw",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "redactVisitorIp",
+                        "value": "true"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "epToIncludeDropdown",
+                        "value": "all"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "{{Event Name}}"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "upToIncludeDropdown",
+                        "value": "all"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementId",
+                        "value": "{{GA4 Measurement ID}}"
+                    }
+                ],
+                "fingerprint": "1776585761447",
+                "firingTriggerId": [
+                    "6"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "tagId": "10",
+                "name": "Debug Requests",
+                "type": "cvt_247403105_8",
+                "fingerprint": "1776586901865",
+                "firingTriggerId": [
+                    "9"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            }
+        ],
+        "trigger": [
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "triggerId": "6",
+                "name": "All GA4 Events",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "MATCH_REGEX",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "page_view|view_item_list|view_item|add_to_cart|remove_from_cart|view_cart|begin_checkout|add_shipping_info|add_payment_info|purchase|search"
+                            }
+                        ]
+                    }
+                ],
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Client Name}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "GA4"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1776581523594"
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "triggerId": "9",
+                "name": "All Requests - Debug Mode",
+                "type": "ALWAYS",
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Debug Mode}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1776586899518"
+            }
+        ],
+        "variable": [
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "variableId": "5",
+                "name": "GA4 Measurement ID",
+                "type": "c",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "value",
+                        "value": "G-PMPS13H1QZ"
+                    }
+                ],
+                "fingerprint": "1776547485000",
+                "formatValue": {}
+            }
+        ],
+        "builtInVariable": [
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "type": "DEBUG_MODE",
+                "name": "Debug Mode"
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "type": "EVENT_NAME",
+                "name": "Event Name"
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "type": "CLIENT_NAME",
+                "name": "Client Name"
+            }
+        ],
+        "fingerprint": "1776586924387",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/28432412/containers/247403105/versions/0?apiLink=version",
+        "customTemplate": [
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "templateId": "8",
+                "name": "Debug Request Data",
+                "fingerprint": "1776583837731",
+                "templateData": "___INFO___\n\n{\n  \"type\": \"TAG\",\n  \"id\": \"cvt_temp_public_id\",\n  \"version\": 1,\n  \"securityGroups\": [],\n  \"displayName\": \"Debug Request Data\",\n  \"brand\": {\n    \"id\": \"brand_dummy\",\n    \"displayName\": \"\"\n  },\n  \"description\": \"\",\n  \"containerContexts\": [\n    \"SERVER\"\n  ]\n}\n\n\n___TEMPLATE_PARAMETERS___\n\n[]\n\n\n___SANDBOXED_JS_FOR_SERVER___\n\nconst getAllEventData = require(\"getAllEventData\");\nconst getRequestHeader = require(\"getRequestHeader\");\nconst getRequestPath = require(\"getRequestPath\");\nconst getRequestQueryString = require(\"getRequestQueryString\");\nconst getClientName = require(\"getClientName\");\nconst getContainerVersion = require(\"getContainerVersion\");\nconst logToConsole = require(\"logToConsole\");\nconst JSON = require(\"JSON\");\n\nconst eventData = getAllEventData();\nconst containerData = getContainerVersion();\nconst containerId = containerData.containerId;\nconst containerVersion = containerData.containerVersion;\nconst headers = {\n  \"user-agent\": getRequestHeader(\"user-agent\"),\n  \"x-forwarded-for\": getRequestHeader(\"x-forwarded-for\"),\n  referer: getRequestHeader(\"referer\"),\n  origin: getRequestHeader(\"origin\"),\n  \"content-type\": getRequestHeader(\"content-type\"),\n  \"x-gtm-server-preview\": getRequestHeader(\"x-gtm-server-preview\"),\n};\n\nlogToConsole(\"[SST DEBUG] _____ START _____\");\n\nlogToConsole(\"[SST DEBUG] --- Meta Data ---\");\n\nlogToConsole(\"[SST DEBUG] Client       :\", getClientName());\nlogToConsole(\"[SST DEBUG] Container    :\", containerId, containerVersion);\nlogToConsole(\"[SST DEBUG] Request Path :\", getRequestPath());\nlogToConsole(\"[SST DEBUG] Query String :\", getRequestQueryString());\n\nlogToConsole(\"[SST DEBUG] --- Request Headers ---\");\n\nfor (var key in headers) {\n  logToConsole(\"[SST DEBUG]\", key, \":\", headers[key]);\n}\n\nlogToConsole(\"[SST DEBUG] --- Eventt Data ---\");\n\nfor (var key in eventData) {\n  logToConsole(\"[SST DEBUG]\", key, \":\", eventData[key]);\n}\n\nlogToConsole(\"[SST DEBUG] ______ END ______\");\n\ndata.gtmOnSuccess();\n\n\n___SERVER_PERMISSIONS___\n\n[\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"read_request\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"requestAccess\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        },\n        {\n          \"key\": \"headerAccess\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        },\n        {\n          \"key\": \"queryParameterAccess\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"logging\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"environments\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"debug\"\n          }\n        }\n      ]\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"read_container_data\",\n        \"versionId\": \"1\"\n      },\n      \"param\": []\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"read_event_data\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"eventDataAccess\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  }\n]\n\n\n___TESTS___\n\nscenarios: []\n\n\n___NOTES___\n\n\n\n\n"
+            }
+        ],
+        "client": [
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "clientId": "1",
+                "name": "GA4",
+                "type": "gaaw_client",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "activateDefaultPaths",
+                        "value": "true"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "cookieManagement",
+                        "value": "server"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "cookieName",
+                        "value": "FPID"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "cookieDomain",
+                        "value": "auto"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "cookiePath",
+                        "value": "/"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "cookieMaxAgeInSec",
+                        "value": "63072000"
+                    }
+                ],
+                "fingerprint": "1774469520296"
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "clientId": "7",
+                "name": "Proxy",
+                "type": "gtm_client",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "activateResponseCompression",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "activateGeoResolution",
+                        "value": "false"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "activateDependencyServing",
+                        "value": "true"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "allowedContainerIds",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "containerId",
+                                        "value": "GTM-K7Q2BTR2"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1776581295969"
+            }
+        ]
+    }
+}
