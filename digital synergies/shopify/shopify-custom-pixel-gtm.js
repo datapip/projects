@@ -1,5 +1,5 @@
 /**
- * Version 1.4.0
+ * Version 1.4.1
  *
  * © 2026 datapip.de - Philipp Jaeckle – Custom implementation.
  *
@@ -240,6 +240,7 @@ analytics?.subscribe?.("page_viewed", async (event) => {
 
   pushEvent({
     event: "page_view",
+    page_location: event?.context?.document?.referrer,
     page_location: event?.context?.document?.location?.href,
     page_title: event?.context?.document?.title,
     page_type: pageType,
