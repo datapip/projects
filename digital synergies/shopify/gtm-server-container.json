@@ -1,0 +1,1108 @@
+{
+    "exportFormatVersion": 2,
+    "exportTime": "2026-05-06 19:36:36",
+    "containerVersion": {
+        "path": "accounts/28432412/containers/247403105/versions/0",
+        "accountId": "28432412",
+        "containerId": "247403105",
+        "containerVersionId": "0",
+        "container": {
+            "path": "accounts/28432412/containers/247403105",
+            "accountId": "28432412",
+            "containerId": "247403105",
+            "name": "Schiesser AG - Shopify (SST)",
+            "publicId": "GTM-P7DCPB6M",
+            "usageContext": [
+                "SERVER"
+            ],
+            "fingerprint": "1776431898662",
+            "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/28432412/containers/247403105/workspaces?apiLink=container",
+            "features": {
+                "supportUserPermissions": true,
+                "supportEnvironments": true,
+                "supportWorkspaces": true,
+                "supportGtagConfigs": false,
+                "supportBuiltInVariables": true,
+                "supportClients": true,
+                "supportFolders": true,
+                "supportTags": true,
+                "supportTemplates": true,
+                "supportTriggers": true,
+                "supportVariables": true,
+                "supportVersions": true,
+                "supportZones": true,
+                "supportTransformations": true
+            },
+            "tagIds": [
+                "GTM-P7DCPB6M"
+            ],
+            "taggingServerUrls": [
+                "https://ds.schiesser.com"
+            ]
+        },
+        "tag": [
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "tagId": "4",
+                "name": "GA4",
+                "type": "sgtmgaaw",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "redactVisitorIp",
+                        "value": "true"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "epToIncludeDropdown",
+                        "value": "all"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "{{Event Name}}"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "upToIncludeDropdown",
+                        "value": "all"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementId",
+                        "value": "{{GA4 Measurement ID}}"
+                    }
+                ],
+                "fingerprint": "1778092870009",
+                "firingTriggerId": [
+                    "6"
+                ],
+                "blockingTriggerId": [
+                    "45"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "tagId": "10",
+                "name": "Debug",
+                "type": "cvt_247403105_8",
+                "fingerprint": "1778089825271",
+                "firingTriggerId": [
+                    "9"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "tagId": "34",
+                "name": "GAds - Conversion Linker",
+                "type": "sgtmadscl",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "enableLinkerParams",
+                        "value": "false"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "enableCookieOverrides",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1778092880648",
+                "firingTriggerId": [
+                    "2147479574"
+                ],
+                "blockingTriggerId": [
+                    "46"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "tagId": "47",
+                "name": "GAds - Remarketing",
+                "type": "sgtmadsremarket",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "enableConversionLinker",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "enableDynamicRemarketing",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "enableCustomParams",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "remarketingEventDataSource",
+                        "value": "EVENT_DATA"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "enableUserId",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "conversionId",
+                        "value": "{{GAds Conversion ID}}"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "conversionLabel",
+                        "value": "{{GAds Remarketing Label}}"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "rdp",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1778094234508",
+                "firingTriggerId": [
+                    "6"
+                ],
+                "blockingTriggerId": [
+                    "46"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "tagId": "50",
+                "name": "GAds - Conversion",
+                "type": "sgtmadsct",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "productReportingDataSource",
+                        "value": "EVENT"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "enableNewCustomerReporting",
+                        "value": "false"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "enableConversionLinker",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "enableProductReporting",
+                        "value": "true"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "conversionValue",
+                        "value": "{{value}}"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "conversionId",
+                        "value": "{{GAds Conversion ID}}"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "currencyCode",
+                        "value": "{{currency}}"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "conversionLabel",
+                        "value": "{{GAds Purchase Label}}"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "rdp",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1778093350234",
+                "firingTriggerId": [
+                    "49"
+                ],
+                "blockingTriggerId": [
+                    "46"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            }
+        ],
+        "trigger": [
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "triggerId": "6",
+                "name": "All Events",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "MATCH_REGEX",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": ".*"
+                            }
+                        ]
+                    }
+                ],
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Client Name}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "GA4"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1778093362602"
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "triggerId": "9",
+                "name": "All Requests - Debug Mode",
+                "type": "ALWAYS",
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Debug Mode}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1776586899518"
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "triggerId": "45",
+                "name": "GA4 Consent Missing",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "MATCH_REGEX",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": ".*"
+                            }
+                        ]
+                    }
+                ],
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{GA4 Consent}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "true"
+                            },
+                            {
+                                "type": "BOOLEAN",
+                                "key": "negate",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1778092812918"
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "triggerId": "46",
+                "name": "GAds Consent Missing",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "MATCH_REGEX",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": ".*"
+                            }
+                        ]
+                    }
+                ],
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{GAds Consent}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "true"
+                            },
+                            {
+                                "type": "BOOLEAN",
+                                "key": "negate",
+                                "value": "true"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1778092841008"
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "triggerId": "49",
+                "name": "Purchase Event",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "purchase"
+                            }
+                        ]
+                    }
+                ],
+                "filter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{Client Name}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "GA4"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1778093338315"
+            }
+        ],
+        "variable": [
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "variableId": "5",
+                "name": "GA4 Measurement ID",
+                "type": "c",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "value",
+                        "value": "G-PMPS13H1QZ"
+                    }
+                ],
+                "fingerprint": "1777135717039",
+                "formatValue": {}
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "variableId": "35",
+                "name": "GAds Remarketing Label",
+                "type": "smm",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "input",
+                        "value": "{{shop_country}}"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "map",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "key",
+                                        "value": "de"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "value",
+                                        "value": "abc123"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "key",
+                                        "value": "ch"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "value",
+                                        "value": "def456"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "key",
+                                        "value": "fr"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "value",
+                                        "value": "hij789"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1778093663731",
+                "formatValue": {}
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "variableId": "36",
+                "name": "GAds Conversion ID",
+                "type": "smm",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "input",
+                        "value": "{{shop_country}}"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "map",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "key",
+                                        "value": "de"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "value",
+                                        "value": "123456789"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "key",
+                                        "value": "ch"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "value",
+                                        "value": "012345678"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "key",
+                                        "value": "fr"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "value",
+                                        "value": "001234567"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1778093617123",
+                "formatValue": {}
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "variableId": "37",
+                "name": "value",
+                "type": "ed",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "keyPath",
+                        "value": "value"
+                    }
+                ],
+                "fingerprint": "1778090731958",
+                "formatValue": {}
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "variableId": "38",
+                "name": "currency",
+                "type": "ed",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "keyPath",
+                        "value": "currency"
+                    }
+                ],
+                "fingerprint": "1778090755093",
+                "formatValue": {}
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "variableId": "39",
+                "name": "transaction_id",
+                "type": "ed",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "keyPath",
+                        "value": "transaction_id"
+                    }
+                ],
+                "fingerprint": "1778090771837",
+                "formatValue": {}
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "variableId": "40",
+                "name": "items",
+                "type": "ed",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "keyPath",
+                        "value": "items"
+                    }
+                ],
+                "fingerprint": "1778090792963",
+                "formatValue": {}
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "variableId": "41",
+                "name": "page_type",
+                "type": "ed",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "keyPath",
+                        "value": "page_type"
+                    }
+                ],
+                "fingerprint": "1778090828059",
+                "formatValue": {}
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "variableId": "42",
+                "name": "x-ga-gcs",
+                "type": "ed",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "keyPath",
+                        "value": "x-ga-gcs"
+                    }
+                ],
+                "fingerprint": "1778091704446",
+                "formatValue": {}
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "variableId": "43",
+                "name": "GA4 Consent",
+                "type": "remm",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "true"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "input",
+                        "value": "{{x-ga-gcs}}"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "fullMatch",
+                        "value": "false"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "replaceAfterMatch",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "defaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "ignoreCase",
+                        "value": "true"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "map",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "key",
+                                        "value": "^G1.1"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "value",
+                                        "value": "true"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1778095960405",
+                "formatValue": {}
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "variableId": "44",
+                "name": "GAds Consent",
+                "type": "remm",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "true"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "input",
+                        "value": "{{x-ga-gcs}}"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "fullMatch",
+                        "value": "false"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "replaceAfterMatch",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "defaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "ignoreCase",
+                        "value": "true"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "map",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "key",
+                                        "value": "^G11"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "value",
+                                        "value": "true"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1778095972856",
+                "formatValue": {}
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "variableId": "48",
+                "name": "GAds Purchase Label",
+                "type": "smm",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "input",
+                        "value": "{{shop_country}}"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "map",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "key",
+                                        "value": "de"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "value",
+                                        "value": "abc123"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "key",
+                                        "value": "ch"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "value",
+                                        "value": "def456"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "key",
+                                        "value": "fr"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "value",
+                                        "value": "hij789"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1778093691199",
+                "formatValue": {}
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "variableId": "51",
+                "name": "shop_country",
+                "type": "ed",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "keyPath",
+                        "value": "shop_country"
+                    }
+                ],
+                "fingerprint": "1778093529126",
+                "formatValue": {}
+            }
+        ],
+        "builtInVariable": [
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "type": "DEBUG_MODE",
+                "name": "Debug Mode"
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "type": "EVENT_NAME",
+                "name": "Event Name"
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "type": "CLIENT_NAME",
+                "name": "Client Name"
+            }
+        ],
+        "fingerprint": "1778096196932",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/28432412/containers/247403105/versions/0?apiLink=version",
+        "customTemplate": [
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "templateId": "8",
+                "name": "Debug Request Data",
+                "fingerprint": "1776583837731",
+                "templateData": "___INFO___\n\n{\n  \"type\": \"TAG\",\n  \"id\": \"cvt_temp_public_id\",\n  \"version\": 1,\n  \"securityGroups\": [],\n  \"displayName\": \"Debug Request Data\",\n  \"brand\": {\n    \"id\": \"brand_dummy\",\n    \"displayName\": \"\"\n  },\n  \"description\": \"\",\n  \"containerContexts\": [\n    \"SERVER\"\n  ]\n}\n\n\n___TEMPLATE_PARAMETERS___\n\n[]\n\n\n___SANDBOXED_JS_FOR_SERVER___\n\nconst getAllEventData = require(\"getAllEventData\");\nconst getRequestHeader = require(\"getRequestHeader\");\nconst getRequestPath = require(\"getRequestPath\");\nconst getRequestQueryString = require(\"getRequestQueryString\");\nconst getClientName = require(\"getClientName\");\nconst getContainerVersion = require(\"getContainerVersion\");\nconst logToConsole = require(\"logToConsole\");\nconst JSON = require(\"JSON\");\n\nconst eventData = getAllEventData();\nconst containerData = getContainerVersion();\nconst containerId = containerData.containerId;\nconst containerVersion = containerData.containerVersion;\nconst headers = {\n  \"user-agent\": getRequestHeader(\"user-agent\"),\n  \"x-forwarded-for\": getRequestHeader(\"x-forwarded-for\"),\n  referer: getRequestHeader(\"referer\"),\n  origin: getRequestHeader(\"origin\"),\n  \"content-type\": getRequestHeader(\"content-type\"),\n  \"x-gtm-server-preview\": getRequestHeader(\"x-gtm-server-preview\"),\n};\n\nlogToConsole(\"[SST DEBUG] _____ START _____\");\n\nlogToConsole(\"[SST DEBUG] --- Meta Data ---\");\n\nlogToConsole(\"[SST DEBUG] Client       :\", getClientName());\nlogToConsole(\"[SST DEBUG] Container    :\", containerId, containerVersion);\nlogToConsole(\"[SST DEBUG] Request Path :\", getRequestPath());\nlogToConsole(\"[SST DEBUG] Query String :\", getRequestQueryString());\n\nlogToConsole(\"[SST DEBUG] --- Request Headers ---\");\n\nfor (var key in headers) {\n  logToConsole(\"[SST DEBUG]\", key, \":\", headers[key]);\n}\n\nlogToConsole(\"[SST DEBUG] --- Eventt Data ---\");\n\nfor (var key in eventData) {\n  logToConsole(\"[SST DEBUG]\", key, \":\", eventData[key]);\n}\n\nlogToConsole(\"[SST DEBUG] ______ END ______\");\n\ndata.gtmOnSuccess();\n\n\n___SERVER_PERMISSIONS___\n\n[\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"read_request\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"requestAccess\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        },\n        {\n          \"key\": \"headerAccess\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        },\n        {\n          \"key\": \"queryParameterAccess\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"logging\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"environments\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"debug\"\n          }\n        }\n      ]\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"read_container_data\",\n        \"versionId\": \"1\"\n      },\n      \"param\": []\n    },\n    \"isRequired\": true\n  },\n  {\n    \"instance\": {\n      \"key\": {\n        \"publicId\": \"read_event_data\",\n        \"versionId\": \"1\"\n      },\n      \"param\": [\n        {\n          \"key\": \"eventDataAccess\",\n          \"value\": {\n            \"type\": 1,\n            \"string\": \"any\"\n          }\n        }\n      ]\n    },\n    \"clientAnnotations\": {\n      \"isEditedByUser\": true\n    },\n    \"isRequired\": true\n  }\n]\n\n\n___TESTS___\n\nscenarios: []\n\n\n___NOTES___\n\n\n\n\n"
+            }
+        ],
+        "client": [
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "clientId": "1",
+                "name": "GA4",
+                "type": "gaaw_client",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "cookieDomain",
+                        "value": "auto"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "cookieMaxAgeInSec",
+                        "value": "63072000"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "activateDefaultPaths",
+                        "value": "true"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "cookiePath",
+                        "value": "/"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "migrateFromJsClientId",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "cookieManagement",
+                        "value": "server"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "cookieName",
+                        "value": "FPID"
+                    }
+                ],
+                "priority": 100,
+                "fingerprint": "1777187379435"
+            },
+            {
+                "accountId": "28432412",
+                "containerId": "247403105",
+                "clientId": "7",
+                "name": "Proxy",
+                "type": "gtm_client",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "activateResponseCompression",
+                        "value": "true"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "activateGeoResolution",
+                        "value": "false"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "activateDependencyServing",
+                        "value": "true"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "allowedContainerIds",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "containerId",
+                                        "value": "GTM-K7Q2BTR2"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "priority": 110,
+                "fingerprint": "1777187402364"
+            }
+        ]
+    }
+}
