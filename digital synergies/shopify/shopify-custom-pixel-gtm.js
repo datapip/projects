@@ -252,7 +252,7 @@ analytics?.subscribe?.("page_viewed", async (event) => {
     page_type: pageType,
     shop_country: shopCountry,
     shop_language: shopLanguage,
-    env: env,
+    environment: env,
     user_id: userId,
     user_orders_count: userOrdersCount,
     user_email_hash: userEmailHash,
