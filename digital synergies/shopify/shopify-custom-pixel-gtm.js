@@ -1,5 +1,5 @@
 /**
- * Version 1.4.1
+ * Version 1.4.7
  *
  * © 2026 datapip.de - Philipp Jaeckle – Custom implementation.
  *
@@ -11,10 +11,14 @@
 /* ---------------------- Variables ---------------------- */
 let gtmLoaded = false;
 let previousEvents = [];
-const isProd = ["www.example.com", "www.example.ch"].includes(
+
+const isProdHostname = ["www.example.com", "www.example.ch"].includes(
   init?.context?.document?.location?.hostname,
 );
+const isDebugEnabled = debugEnabled();
+const isProd = isProdHostname && !isDebugEnabled;
 const env = isProd ? "production" : "development";
+
 const customEndpointGTM = "sst.example.com";
 const defaultShopLanguage = "de";
 const redactGoogleAds = true;
@@ -24,8 +28,10 @@ const __userPhone = init?.data?.customer?.phone || null;
 const userId = init?.data?.customer?.id || null;
 const userOrdersCount = init?.data?.customer?.ordersCount || null;
 
-const shopCountry = (init?.data?.shop?.countryCode || "").toLowerCase() || null;
 const shopLanguage = getLanguageFromPathname(
+  init?.context?.document?.location?.pathname,
+);
+const shopCountry = getCountryFromPathname(
   init?.context?.document?.location?.pathname,
 );
 const pageType = getTypeFromPathname(
@@ -778,8 +784,12 @@ analytics?.subscribe?.("ui_extension_errored", (event) => {
 });
 
 /* ---------------------- Utility functions ---------------------- */
-function isLanguageCode(string) {
-  return /^[a-z]{2}(-[A-Z]{2})?$/.test(string);
+function debugEnabled() {
+  return !!sessionStorage.getItem("webPixelDebug");
+}
+
+function isLocalePrefix(string) {
+  return /^[a-z]{2}(-[a-z]{2})?$/.test(string);
 }
 
 function getLanguageFromPathname(pathname) {
@@ -789,11 +799,25 @@ function getLanguageFromPathname(pathname) {
 
   const segments = pathname.split("/").filter(Boolean);
 
-  if (isLanguageCode(segments[0])) {
-    return segments[0];
+  if (isLocalePrefix(segments[0])) {
+    return segments[0].split("-")[0];
   }
 
   return defaultShopLanguage;
+}
+
+function getCountryFromPathname(pathname) {
+  if (!pathname || pathname === "/") {
+    return null;
+  }
+
+  const segments = pathname.split("/").filter(Boolean);
+
+  if (isLocalePrefix(segments[0]) && segments[0].includes("-")) {
+    return segments[0].split("-")[1];
+  }
+
+  return null;
 }
 
 function getTypeFromPathname(pathname) {
@@ -815,7 +839,7 @@ function getTypeFromPathname(pathname) {
 
   const segments = pathname.split("/").filter(Boolean);
 
-  const typeSegment = isLanguageCode(segments[0]) ? segments[1] : segments[0];
+  const typeSegment = isLocalePrefix(segments[0]) ? segments[1] : segments[0];
 
   return lookup[typeSegment] || "other";
 }
