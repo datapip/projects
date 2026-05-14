@@ -1,0 +1,13 @@
+<script>
+  if (window.uetq) {
+    var ecommerce; //= {{ecommerce}};
+    var value = ecommerce.value || 0;
+    var currency = ecommerce.currency || "EUR";
+
+    window.uetq.push("event", "Bestellung", {
+      event_category: "Conversion",
+      revenue_value: value,
+      currency: currency,
+    });
+  }
+</script>
