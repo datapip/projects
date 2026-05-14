@@ -10,15 +10,19 @@ const returnResponse = require("returnResponse");
 const setResponseHeader = require("setResponseHeader");
 const setResponseBody = require("setResponseBody");
 const setResponseStatus = require("setResponseStatus");
-const JSON = require("JSON");
+const makeNumber = require("makeNumber");
 const log = require("logToConsole");
+const JSON = require("JSON");
 
 const CONFIG = {
-  brazeBaseUrl: data.API_ENDPOINT,
   brazeCdnUrl: "https://js.appboycdn.com",
-  allowedOrigins: (data.ALLOWED_ORIGINS || []).map((origin) => origin.url),
-  allowedApiKeys: (data.ALLOWED_API_KEYS || []).map((key) => key.value),
-  forwardHeaders: [
+  brazeBaseUrl: data.API_ENDPOINT,
+  allowedOrigin: data.ALLOWED_ORIGIN || "",
+  allowedApiKey: data.ALLOWED_API_KEY || "",
+  additionalHeaders: (data.ADDITIONAL_HEADERS || []).map((key) => key.HEADER),
+  timeoutSdk: makeNumber(data.SDK_TIMEOUT || 5000),
+  timeoutApi: makeNumber(data.API_TIMEOUT || 10000),
+  standardHeaders: [
     "x-braze-sdk-version",
     "x-braze-request-id",
     "x-braze-sdk-flavor",
@@ -47,16 +51,19 @@ const CONFIG = {
     "access-control-allow-origin",
     "access-control-allow-credentials",
   ],
-  timeoutApi: 10000,
-  timeoutSdk: 5000,
 };
+
+// Logging
+const previewHeader = getRequestHeader("x-gtm-server-preview");
+const isPreview = !!previewHeader;
+if (isPreview) log("Braze Proxy: config", CONFIG);
 
 // Entry
 const path = getRequestPath();
 if (!path) return;
 
 // Router
-if (path.indexOf("/web-sdk") === 0 && path.indexOf("braze.min.js") !== -1) {
+if (path.indexOf("/web-sdk/") === 0 && path.slice(-13) === "/braze.min.js") {
   claimRequest();
   handleSdk(path);
 } else if (path.indexOf("/api/v3/") === 0) {
@@ -68,8 +75,10 @@ if (path.indexOf("/web-sdk") === 0 && path.indexOf("braze.min.js") !== -1) {
 function handleSdk(path) {
   // Origin validation
   const referer = getRequestHeader("referer");
+
   if (!isAllowedReferer(referer)) {
-    return deny(403, "Origin not allowed");
+    if (isPreview) log("Braze Proxy: referrer not allowed:", referer);
+    return deny(403, "Forbidden");
   }
 
   const upstreamUrl = CONFIG.brazeCdnUrl + path;
@@ -79,14 +88,17 @@ function handleSdk(path) {
 }
 
 function handleApi(path) {
-  // Setting headers
+  // Get origin
   const origin = getRequestHeader("origin");
-  setHeaders(origin);
 
   // Origin validation
   if (!isAllowedOrigin(origin)) {
-    return deny(403, "Origin not allowed");
+    if (isPreview) log("Braze Proxy: origin not allowed:", origin);
+    return deny(403, "Forbidden");
   }
+
+  // Set headers
+  setHeaders(origin);
 
   // Handle preflight
   const method = getRequestMethod();
@@ -97,7 +109,8 @@ function handleApi(path) {
   // API key validation
   const apiKey = getRequestHeader("x-braze-api-key");
   if (!apiKey || !isValidApiKey(apiKey)) {
-    return deny(403, "Invalid API key");
+    if (isPreview) log("Braze Proxy: api key missing or not allowed");
+    return deny(403, "Forbidden");
   }
 
   // Request preparation
@@ -117,25 +130,30 @@ function handleApi(path) {
 }
 
 // Helpers
-function isAllowedReferer(referer) {
-  if (!referer) return false;
-  var allowed = false;
-  CONFIG.allowedOrigins.forEach((origin) => {
-    if (origin + "/" === referer) {
-      allowed = true;
-    }
-  });
-  return allowed;
+function isAllowedOrigin(origin) {
+  if (isPreview) log("Braze Proxy: check origin:", origin);
+
+  if (!CONFIG.allowedOrigin) return true;
+
+  return origin === CONFIG.allowedOrigin;
 }
 
-function isAllowedOrigin(origin) {
-  if (!origin) return false;
-  return CONFIG.allowedOrigins.indexOf(origin) !== -1;
+function isAllowedReferer(referer) {
+  if (isPreview) log("Braze Proxy: check referer:", referer);
+
+  if (!CONFIG.allowedOrigin) return true;
+
+  if (!referer) return false;
+
+  return referer.indexOf(CONFIG.allowedOrigin) === 0;
 }
 
 function isValidApiKey(apiKey) {
-  if (!apiKey) return false;
-  return CONFIG.allowedApiKeys.indexOf(apiKey) !== -1;
+  if (isPreview) log("Braze Proxy: check api key:", apiKey);
+
+  if (!CONFIG.allowedApiKey) return true;
+
+  return apiKey === CONFIG.allowedApiKey;
 }
 
 function setHeaders(origin) {
@@ -144,6 +162,7 @@ function setHeaders(origin) {
     setResponseHeader("access-control-allow-headers", requestedHeaders);
   }
   setResponseHeader("access-control-allow-origin", origin);
+  setResponseHeader("access-control-max-age", "86400");
   setResponseHeader("access-control-allow-credentials", "true");
   setResponseHeader("access-control-allow-methods", "POST,GET,OPTIONS");
   setResponseHeader("vary", "origin");
@@ -168,7 +187,11 @@ function buildTargetUrl(path, queryString) {
 
 function buildForwardHeaders(clientIp) {
   const headers = {};
-  CONFIG.forwardHeaders.forEach((header) => {
+  const forwardHeaders = [].concat(
+    CONFIG.standardHeaders,
+    CONFIG.additionalHeaders,
+  );
+  forwardHeaders.forEach((header) => {
     const value = getRequestHeader(header);
     if (value) headers[header] = value;
   });
@@ -179,8 +202,8 @@ function buildForwardHeaders(clientIp) {
 }
 
 function handleSdkSuccess(result) {
-  if (!result.body || result.statusCode >= 400) {
-    return handleFailure();
+  if (result.statusCode >= 400) {
+    return handleFailure("CDN returned: " + result.statusCode);
   }
   setResponseHeader("cache-control", "public, max-age=14400");
   setResponseHeader("content-type", "application/javascript");
@@ -204,6 +227,7 @@ function handleApiSuccess(result) {
 }
 
 function handleFailure(error) {
+  if (error && isPreview) log("Braze Proxy: error", error);
   setResponseStatus(502);
   setResponseBody("Upstream service error");
   returnResponse();
