@@ -19,27 +19,20 @@ const headers = {
   "x-gtm-server-preview": getRequestHeader("x-gtm-server-preview"),
 };
 
-logToConsole("[SST DEBUG] _____ START _____");
-
-logToConsole("[SST DEBUG] --- Meta Data ---");
-
-logToConsole("[SST DEBUG] Client       :", getClientName());
-logToConsole("[SST DEBUG] Container    :", containerId, containerVersion);
-logToConsole("[SST DEBUG] Request Path :", getRequestPath());
-logToConsole("[SST DEBUG] Query String :", getRequestQueryString());
-
-logToConsole("[SST DEBUG] --- Request Headers ---");
-
+logToConsole("_____ REQUEST START: '" + eventData.event_name + "' _____");
+logToConsole("[1] Meta Data:");
+logToConsole("- Client       : " + getClientName());
+logToConsole("- Container    : " + containerId + " " + containerVersion);
+logToConsole("- Request Path : " + getRequestPath());
+logToConsole("- Query String : " + getRequestQueryString());
+logToConsole("[2] Request Headers");
 for (var key in headers) {
-  logToConsole("[SST DEBUG]", key, ":", headers[key]);
+  logToConsole("- " + key + " : " + headers[key]);
 }
-
-logToConsole("[SST DEBUG] --- Event Data ---");
-
+logToConsole("[3] Event Data");
 for (var key in eventData) {
-  logToConsole("[SST DEBUG]", key, ":", eventData[key]);
+  logToConsole("- " + key + " : " + eventData[key]);
 }
-
-logToConsole("[SST DEBUG] ______ END ______");
+logToConsole("_____ REQUEST END: '" + eventData.event_name + "' _____");
 
 data.gtmOnSuccess();
