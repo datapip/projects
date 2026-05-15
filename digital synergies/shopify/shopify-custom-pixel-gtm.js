@@ -10,16 +10,17 @@
 
 /* ---------------------- Variables ---------------------- */
 let gtmLoaded = false;
-let previousEvents = [];
+let pendingEvents = [];
 
-const isProdHostname = ["www.example.com", "www.example.ch"].includes(
+const isProdHostname = ["shop.schiesser.com"].includes(
   init?.context?.document?.location?.hostname,
 );
 const isDebugEnabled = debugEnabled();
 const isProd = isProdHostname && !isDebugEnabled;
 const env = isProd ? "production" : "development";
 
-const customEndpointGTM = "sst.example.com";
+const customEndpointGTM = null; //"ds.schiesser.com";
+const defaultShopCountry = "de";
 const defaultShopLanguage = "de";
 const redactGoogleAds = true;
 
@@ -28,10 +29,10 @@ const __userPhone = init?.data?.customer?.phone || null;
 const userId = init?.data?.customer?.id || null;
 const userOrdersCount = init?.data?.customer?.ordersCount || null;
 
-const shopLanguage = getLanguageFromPathname(
+const shopCountry = getCountryFromPathname(
   init?.context?.document?.location?.pathname,
 );
-const shopCountry = getCountryFromPathname(
+const shopLanguage = getLanguageFromPathname(
   init?.context?.document?.location?.pathname,
 );
 const pageType = getTypeFromPathname(
@@ -97,6 +98,7 @@ if (
   privacy = {
     consent_analytics: init?.customerPrivacy?.analyticsProcessingAllowed,
     consent_marketing: init?.customerPrivacy?.marketingAllowed,
+    //personalization: consent_personalization: init?.customerPrivacy?.,
   };
 
   gtag("consent", "update", {
@@ -165,8 +167,8 @@ function loadGTM() {
     f?.parentNode?.insertBefore(j, f);
   })(window, document, "script", "dataLayer", "GTM-K7Q2BTR2");
 
-  previousEvents.forEach((data) => dataLayer.push(data));
-  previousEvents = [];
+  pendingEvents.forEach((data) => dataLayer.push(data));
+  pendingEvents = [];
 }
 
 /* ---------------------- Validation functions ---------------------- */
@@ -792,32 +794,26 @@ function isLocalePrefix(string) {
   return /^[a-z]{2}(-[a-z]{2})?$/.test(string);
 }
 
-function getLanguageFromPathname(pathname) {
-  if (!pathname || pathname === "/") {
-    return defaultShopLanguage;
-  }
-
+// Scans all path segments so locale is found regardless of position
+// (handles /de-ch/... and /checkouts/cn/{token}/de-ch/... equally).
+function getLocaleFromPathname(pathname) {
+  if (!pathname || pathname === "/") return null;
   const segments = pathname.split("/").filter(Boolean);
-
-  if (isLocalePrefix(segments[0])) {
-    return segments[0].split("-")[0];
+  for (const segment of segments) {
+    if (isLocalePrefix(segment)) return segment;
   }
+  return null;
+}
 
-  return defaultShopLanguage;
+function getLanguageFromPathname(pathname) {
+  const locale = getLocaleFromPathname(pathname);
+  return locale ? locale.split("-")[0] : defaultShopLanguage;
 }
 
 function getCountryFromPathname(pathname) {
-  if (!pathname || pathname === "/") {
-    return null;
-  }
-
-  const segments = pathname.split("/").filter(Boolean);
-
-  if (isLocalePrefix(segments[0]) && segments[0].includes("-")) {
-    return segments[0].split("-")[1];
-  }
-
-  return null;
+  const locale = getLocaleFromPathname(pathname);
+  if (!locale || !locale.includes("-")) return defaultShopCountry;
+  return locale.split("-")[1];
 }
 
 function getTypeFromPathname(pathname) {
@@ -830,6 +826,7 @@ function getTypeFromPathname(pathname) {
     collections: "collection",
     products: "product",
     checkout: "checkout",
+    checkouts: "checkout",
     blogs: "blog",
     articles: "article",
     search: "search",
@@ -839,7 +836,8 @@ function getTypeFromPathname(pathname) {
 
   const segments = pathname.split("/").filter(Boolean);
 
-  const typeSegment = isLocalePrefix(segments[0]) ? segments[1] : segments[0];
+  // Skip locale prefix wherever it appears — first segment or mid-path
+  const typeSegment = segments.find((s) => !isLocalePrefix(s));
 
   return lookup[typeSegment] || "other";
 }
@@ -852,7 +850,7 @@ function pushEvent(data) {
   if (gtmLoaded) {
     dataLayer.push(data);
   } else {
-    previousEvents.push(data);
+    pendingEvents.push(data);
   }
 }
 
