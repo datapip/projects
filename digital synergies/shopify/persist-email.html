@@ -1,0 +1,17 @@
+<script>
+  (function () {
+    var email = "{{user_email}}";
+
+    if (!email || email === "undefined" || email === "null") {
+      return;
+    }
+
+    try {
+      var normalised = String(email).trim().toLowerCase();
+
+      if (normalised.indexOf("@") > 0) {
+        localStorage.setItem("em_e", normalised);
+      }
+    } catch (e) {}
+  })();
+</script>
