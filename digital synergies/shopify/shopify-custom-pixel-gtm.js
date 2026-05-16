@@ -794,8 +794,6 @@ function isLocalePrefix(string) {
   return /^[a-z]{2}-[a-z]{2}$/.test(string);
 }
 
-// Scans all path segments so locale is found regardless of position
-// (handles /de-ch/... and /checkouts/cn/{token}/de-ch/... equally).
 function getLocaleFromPathname(pathname) {
   if (!pathname || pathname === "/") return null;
   const segments = pathname.split("/").filter(Boolean);
