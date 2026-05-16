@@ -22,6 +22,14 @@
     var currentEvent = "{{Event}}";
 
     // 4. Handle Specific Events
+    if (currentEvent === "search") {
+      var searchTerm; //= {{search_term}};
+      if (!searchTerm) return;
+      ScarabQueue.push(["searchTerm", String(searchTerm)]);
+      ScarabQueue.push(["go"]);
+      return;
+    }
+
     if (currentEvent === "view_item") {
       var items; //= {{ecommerce}} ? {{ecommerce}}["items"] : [];
       if (items && items[0]) {
@@ -39,6 +47,7 @@
 
     if (currentEvent === "view_cart") {
       var items; //= {{ecommerce}} ? {{ecommerce}}["items"] : [];
+      if (!items || !items.length) return;
       ScarabQueue.push(["cart", toCartItems(items)]);
       ScarabQueue.push(["go"]);
       return;
@@ -82,7 +91,8 @@
     if (
       currentPageType === "product" ||
       currentPageType === "cart" ||
-      currentPageType === "checkout"
+      currentPageType === "checkout" ||
+      currentPageType === "search"
     ) {
       return;
     }
