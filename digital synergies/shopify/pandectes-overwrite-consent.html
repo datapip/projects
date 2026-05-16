@@ -1,0 +1,12 @@
+<script>
+  window.addEventListener("PandectesInitialized", function () {
+    try {
+      window.Pandectes.setTrackingConsent({
+        preferences: false,
+      });
+      console.info("Opted user out of 'preference' category.");
+    } catch (error) {
+      console.warn("Could not opt out user of 'preference' category.", error);
+    }
+  });
+</script>
