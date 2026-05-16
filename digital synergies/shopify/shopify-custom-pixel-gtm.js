@@ -19,7 +19,7 @@ const isDebugEnabled = debugEnabled();
 const isProd = isProdHostname && !isDebugEnabled;
 const env = isProd ? "production" : "development";
 
-const customEndpointGTM = null; //"ds.schiesser.com";
+const customEndpointGTM = "ds.schiesser.com";
 const defaultShopCountry = "de";
 const defaultShopLanguage = "de";
 const redactGoogleAds = true;
@@ -791,7 +791,7 @@ function debugEnabled() {
 }
 
 function isLocalePrefix(string) {
-  return /^[a-z]{2}(-[a-z]{2})?$/.test(string);
+  return /^[a-z]{2}-[a-z]{2}$/.test(string);
 }
 
 // Scans all path segments so locale is found regardless of position
