@@ -1,5 +1,5 @@
 /**
- * Version 1.4.8
+ * Version 1.4.9
  *
  * © 2026 datapip.de - Philipp Jaeckle – Custom implementation.
  *
@@ -24,8 +24,12 @@ const defaultShopCountry = "de";
 const defaultShopLanguage = "de";
 const redactGoogleAds = true;
 
-const __userEmail = (init?.data?.customer?.email || "").toLowerCase() || null;
-const __userPhone = init?.data?.customer?.phone || null;
+let __userEmail = (init?.data?.customer?.email || "").toLowerCase() || null;
+let userEmailHash = null;
+
+let __userPhone = init?.data?.customer?.phone || null;
+let userPhoneHash = null;
+
 const userId = init?.data?.customer?.id || null;
 const userOrdersCount = init?.data?.customer?.ordersCount || null;
 
@@ -39,8 +43,6 @@ const pageType = getTypeFromPathname(
   init?.context?.document?.location?.pathname,
 );
 
-let userEmailHash = null;
-let userPhoneHash = null;
 let privacy = {
   consent_analytics: false,
   consent_marketing: false,
@@ -259,8 +261,8 @@ analytics?.subscribe?.("page_viewed", async (event) => {
     user_orders_count: userOrdersCount,
     user_email_hash: userEmailHash,
     user_phone_hash: userPhoneHash,
-    // __user_email: __userEmail,
-    // __user_phone: __userPhone,
+    __user_email: __userEmail,
+    __user_phone: __userPhone,
   });
 });
 
@@ -580,7 +582,7 @@ analytics?.subscribe?.("checkout_started", (event) => {
   });
 });
 
-analytics?.subscribe?.("checkout_address_info_submitted", (event) => {
+analytics?.subscribe?.("checkout_address_info_submitted", async (event) => {
   flushEcommerce();
 
   const ga4_event_name = "add_shipping_info";
@@ -590,6 +592,11 @@ analytics?.subscribe?.("checkout_address_info_submitted", (event) => {
   if (!checkout) {
     pushError(ga4_event_name, "missing analytics api data");
     return;
+  }
+
+  __userEmail = (checkout.email || "").toLowerCase() || null;
+  if (__userEmail) {
+    userEmailHash = await sha256(__userEmail);
   }
 
   const ga4_ecommerce_object = {
@@ -633,6 +640,8 @@ analytics?.subscribe?.("checkout_address_info_submitted", (event) => {
   pushEvent({
     event: ga4_event_name,
     ecommerce: ga4_ecommerce_object,
+    user_email_hash: userEmailHash,
+    __user_email: __userEmail,
   });
 });
 
