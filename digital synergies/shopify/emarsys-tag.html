@@ -107,7 +107,8 @@
         var email; //= {{user_email}};
 
         if (!email || email === "undefined" || email === "null") {
-          email = localStorage.getItem("em_e");
+          var stored = localStorage.getItem("em_e");
+          email = stored ? atob(stored) : null;
         }
 
         return email ? email.trim().toLowerCase() : "";

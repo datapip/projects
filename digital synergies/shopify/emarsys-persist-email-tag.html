@@ -10,7 +10,7 @@
       var normalised = String(email).trim().toLowerCase();
 
       if (normalised.indexOf("@") > 0) {
-        localStorage.setItem("em_e", normalised);
+        localStorage.setItem("em_e", btoa(normalised));
       }
     } catch (e) {}
   })();
