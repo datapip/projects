@@ -44,6 +44,7 @@ const pageType = getTypeFromPathname(
 );
 
 let privacy = {
+  consent_functional: false,
   consent_analytics: false,
   consent_marketing: false,
 };
@@ -88,19 +89,21 @@ if (redactGoogleAds) {
 
 window.dataLayer.push({
   event: "consent_default",
+  consent_functional: privacy.consent_functional,
   consent_analytics: privacy.consent_analytics,
   consent_marketing: privacy.consent_marketing,
 });
 
 /* ---------------------- Handling initial consent ---------------------- */
 if (
+  init?.customerPrivacy?.preferencesProcessingAllowed ||
   init?.customerPrivacy?.analyticsProcessingAllowed ||
   init?.customerPrivacy?.marketingAllowed
 ) {
   privacy = {
+    consent_functional: init?.customerPrivacy?.preferencesProcessingAllowed,
     consent_analytics: init?.customerPrivacy?.analyticsProcessingAllowed,
     consent_marketing: init?.customerPrivacy?.marketingAllowed,
-    //personalization: consent_personalization: init?.customerPrivacy?.,
   };
 
   gtag("consent", "update", {
@@ -112,11 +115,16 @@ if (
 
   window.dataLayer.push({
     event: "consent_update",
+    consent_functional: privacy.consent_functional,
     consent_analytics: privacy.consent_analytics,
     consent_marketing: privacy.consent_marketing,
   });
 
-  if (privacy.consent_analytics || privacy.consent_marketing) {
+  if (
+    privacy.consent_functional ||
+    privacy.consent_analytics ||
+    privacy.consent_marketing
+  ) {
     loadGTM();
   }
 }
@@ -124,6 +132,7 @@ if (
 /* ---------------------- Handling consent changes ---------------------- */
 api.customerPrivacy?.subscribe?.("visitorConsentCollected", (event) => {
   privacy = {
+    consent_functional: event?.customerPrivacy?.preferencesProcessingAllowed,
     consent_analytics: event?.customerPrivacy?.analyticsProcessingAllowed,
     consent_marketing: event?.customerPrivacy?.marketingAllowed,
   };
@@ -137,11 +146,16 @@ api.customerPrivacy?.subscribe?.("visitorConsentCollected", (event) => {
 
   window.dataLayer.push({
     event: "consent_update",
+    consent_functional: privacy.consent_functional,
     consent_analytics: privacy.consent_analytics,
     consent_marketing: privacy.consent_marketing,
   });
 
-  if (privacy.consent_analytics || privacy.consent_marketing) {
+  if (
+    privacy.consent_functional ||
+    privacy.consent_analytics ||
+    privacy.consent_marketing
+  ) {
     loadGTM();
   }
 });
