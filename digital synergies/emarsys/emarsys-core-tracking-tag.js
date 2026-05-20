@@ -37,10 +37,17 @@
   }
 
   // customer identity
-  var email = getEmail();
-  if (email && window.__emarsysEmailSent !== email) {
-    window.__emarsysEmailSent = email;
-    ScarabQueue.push(["setEmail", email]);
+  var marketingConsent; // = {{consent_marketing}};
+  if (marketingConsent) {
+    var email = getEmail();
+    if (email && window.__emarsysEmailSent !== email) {
+      window.__emarsysEmailSent = email;
+      ScarabQueue.push(["setEmail", email]);
+      if (isDebug) console.log("[Emarsys] email set.");
+    }
+  } else {
+    if (isDebug)
+      console.log("[Emarsys] email not set - marketing consent missing.");
   }
 
   // view_item event

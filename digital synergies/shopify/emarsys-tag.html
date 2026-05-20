@@ -1,5 +1,7 @@
 <script>
   (function () {
+    var isDebug; // = !!{{Debug Mode}};
+
     // 1. Initialize Scarab Queue safely
     window.ScarabQueue = window.ScarabQueue || [];
 
@@ -17,6 +19,7 @@
     if (email && window.__emarsysEmailSent !== email) {
       window.__emarsysEmailSent = email;
       ScarabQueue.push(["setEmail", email]);
+      if (isDebug) console.log("[Emarsys] email set.");
     }
 
     var currentEvent = "{{Event}}";
@@ -26,6 +29,7 @@
       var searchTerm; //= {{search_term}};
       if (!searchTerm) return;
       ScarabQueue.push(["searchTerm", String(searchTerm)]);
+      if (isDebug) console.log("[Emarsys] search set:", searchTerm);
       ScarabQueue.push(["go"]);
       return;
     }
@@ -34,11 +38,14 @@
       var items; //= {{ecommerce}} ? {{ecommerce}}["items"] : [];
       if (items && items[0]) {
         if (items[0].item_id) {
-          ScarabQueue.push(["view", String(items[0].item_id)]);
+          var product = String(items[0].item_id);
+          ScarabQueue.push(["view", product]);
+          if (isDebug) console.log("[Emarsys] product set:", product);
         }
         var category = getCategory(items[0]);
         if (category) {
           ScarabQueue.push(["category", category]);
+          if (isDebug) console.log("[Emarsys] category set:", category);
         }
       }
       ScarabQueue.push(["go"]);
@@ -48,42 +55,41 @@
     if (currentEvent === "view_cart") {
       var items; //= {{ecommerce}} ? {{ecommerce}}["items"] : [];
       if (!items || !items.length) return;
-      ScarabQueue.push(["cart", toCartItems(items)]);
+      var cart = toCartItems(items);
+      ScarabQueue.push(["cart", cart]);
+      if (isDebug) console.log("[Emarsys] cart set:", cart);
       ScarabQueue.push(["go"]);
       return;
+    }
+
+    if (currentEvent === "add_shipping_info") {
+      var email = "{{user_email}}";
+      if (!email || email === "undefined" || email === "null") {
+        return;
+      }
+      try {
+        var normalised = String(email).trim().toLowerCase();
+        if (normalised.indexOf("@") > 0) {
+          localStorage.setItem("em_e", btoa(normalised));
+          if (isDebug)
+            console.log("[Emarsys] persisted email:", btoa(normalised));
+        }
+      } catch (e) {
+        if (isDebug) console.log("[Emarsys] error in persisting email:", e);
+      }
     }
 
     if (currentEvent === "purchase") {
       var orderId; //= {{ecommerce}} ? {{ecommerce}}["transaction_id"] : "";
       var items; //= {{ecommerce}} ? {{ecommerce}}["items"] : [];
+      if (isDebug) console.log("[Emarsys] order id and items:", orderId, items);
       if (orderId) {
-        // Guard against duplicate calls on Thank You page reloads
-        try {
-          var key = "em_purchase_" + orderId;
-          if (!sessionStorage.getItem(key)) {
-            sessionStorage.setItem(key, "1");
-            ScarabQueue.push([
-              "purchase",
-              {
-                orderId: String(orderId),
-                items: toCartItems(items),
-              },
-            ]);
-            ScarabQueue.push(["go"]);
-            return;
-          } else {
-            return; // Exit completely if duplicate tracking attempt
-          }
-        } catch (e) {
-          // Fallback execution if sessionStorage is blocked (e.g. Incognito)
-          ScarabQueue.push([
-            "purchase",
-            { orderId: String(orderId), items: toCartItems(items) },
-          ]);
-          ScarabQueue.push(["go"]);
-          return;
-        }
+        var order = { orderId: String(orderId), items: toCartItems(items) };
+        ScarabQueue.push(["purchase", order]);
+        if (isDebug) console.log("[Emarsys] order set:", order);
       }
+      ScarabQueue.push(["go"]);
+      return;
     }
 
     // 5. Exit early in case of view_item, view_cart and purchase
@@ -97,24 +103,19 @@
       return;
     }
 
-    // 6. Always trigger "go" at the end of an evaluation cycle
+    // 6. Trigger for default Events
+    if (isDebug) console.log("[Emarsys] default go.");
     ScarabQueue.push(["go"]);
 
     // ----- Helper functions -----
 
     function getEmail() {
-      try {
-        var email; //= {{user_email}};
-
-        if (!email || email === "undefined" || email === "null") {
-          var stored = localStorage.getItem("em_e");
-          email = stored ? atob(stored) : null;
-        }
-
-        return email ? email.trim().toLowerCase() : "";
-      } catch (e) {
-        return "";
+      var email; //= {{user_email}};
+      if (!email || email === "undefined" || email === "null") {
+        var stored = localStorage.getItem("em_e");
+        email = stored ? atob(stored) : null;
       }
+      return email ? email.trim().toLowerCase() : "";
     }
 
     function getCategory(item) {
