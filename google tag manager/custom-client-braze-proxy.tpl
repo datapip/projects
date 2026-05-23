@@ -150,7 +150,7 @@ ___TEMPLATE_PARAMETERS___
 
 ___SANDBOXED_JS_FOR_SERVER___
 
-// © 2026 datapip.de — Single-container license. Redistribution prohibited.
+// © 2026 datapip.de — Single-company license. Redistribution prohibited.
 const claimRequest = require("claimRequest");
 const getRequestPath = require("getRequestPath");
 const getRequestMethod = require("getRequestMethod");
@@ -702,8 +702,10 @@ scenarios:
 ___NOTES___
 
 © 2026 datapip.de. All rights reserved.
-Licensed for use on a single GTM server container per purchase.
-Redistribution, resale, modification for resale, and sublicensing are prohibited.
+Single-company license. The purchase grants usage rights exclusively to the 
+purchasing company/entity for their own internal domains and containers.
+Sharing, redistribution, resale, modification for resale, and sublicensing 
+outside of the purchasing company are strictly prohibited.
 Unauthorized duplication violates applicable copyright law.
 
 ---
