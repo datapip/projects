@@ -10,15 +10,20 @@ const returnResponse = require("returnResponse");
 const setResponseHeader = require("setResponseHeader");
 const setResponseBody = require("setResponseBody");
 const setResponseStatus = require("setResponseStatus");
+const makeString = require("makeString");
 const makeNumber = require("makeNumber");
 const log = require("logToConsole");
 const JSON = require("JSON");
 
 const CONFIG = {
   brazeCdnUrl: "https://js.appboycdn.com",
-  brazeBaseUrl: data.API_ENDPOINT,
-  allowedOrigin: data.ALLOWED_ORIGIN || "",
-  allowedApiKey: data.ALLOWED_API_KEY || "",
+  brazeBaseUrl: normalizeBaseUrl(data.API_ENDPOINT),
+  allowedOrigins: (data.ALLOWED_ORIGINS || [])
+    .map((row) => makeString(row.ORIGIN || ""))
+    .filter((o) => o !== ""),
+  allowedApiKeys: (data.ALLOWED_API_KEYS || [])
+    .map((row) => makeString(row.API_KEY || ""))
+    .filter((a) => a !== ""),
   additionalHeaders: (data.ADDITIONAL_HEADERS || []).map((key) => key.HEADER),
   timeoutSdk: makeNumber(data.SDK_TIMEOUT || 5000),
   timeoutApi: makeNumber(data.API_TIMEOUT || 10000),
@@ -63,10 +68,10 @@ const path = getRequestPath();
 if (!path) return;
 
 // Router
-if (path.indexOf("/web-sdk/") === 0 && path.slice(-13) === "/braze.min.js") {
+if (isSdkPath(path) && isSafePath(path)) {
   claimRequest();
   handleSdk(path);
-} else if (path.indexOf("/api/v3/") === 0) {
+} else if (path.indexOf("/api/v3/") === 0 && isSafePath(path)) {
   claimRequest();
   handleApi(path);
 }
@@ -117,7 +122,7 @@ function handleApi(path) {
   const requestBody = normalizeBody(getRequestBody());
   const targetUrl = buildTargetUrl(path, getRequestQueryString());
   const clientIp = getRemoteAddress();
-  const headers = buildForwardHeaders(clientIp);
+  const headers = buildForwardHeaders(clientIp, method);
 
   // Forward request
   sendHttpRequest(
@@ -130,30 +135,60 @@ function handleApi(path) {
 }
 
 // Helpers
+function normalizeBaseUrl(url) {
+  const string = makeString(url || "");
+  return string.slice(-1) === "/" ? string.slice(0, -1) : string;
+}
+
+function isSafePath(path) {
+  return path.indexOf("..") === -1 && path.indexOf("//") === -1;
+}
+
+function isSdkPath(path) {
+  return (
+    path.indexOf("/web-sdk/") === 0 &&
+    (path.slice(-7) === ".min.js" || path.slice(-11) === ".min.js.map")
+  );
+}
+
 function isAllowedOrigin(origin) {
   if (isPreview) log("Braze Proxy: check origin:", origin);
-
-  if (!CONFIG.allowedOrigin) return true;
-
-  return origin === CONFIG.allowedOrigin;
+  if (!CONFIG.allowedOrigins.length) return true;
+  const normalized = makeString(origin || "").toLowerCase();
+  for (let i = 0; i < CONFIG.allowedOrigins.length; i++) {
+    if (CONFIG.allowedOrigins[i] === normalized) return true;
+  }
+  return false;
 }
 
 function isAllowedReferer(referer) {
   if (isPreview) log("Braze Proxy: check referer:", referer);
-
-  if (!CONFIG.allowedOrigin) return true;
-
+  if (!CONFIG.allowedOrigins.length) return true;
   if (!referer) return false;
-
-  return referer.indexOf(CONFIG.allowedOrigin) === 0;
+  const normalized = makeString(referer).toLowerCase();
+  for (let i = 0; i < CONFIG.allowedOrigins.length; i++) {
+    const origin = CONFIG.allowedOrigins[i];
+    if (normalized.indexOf(origin) === 0) {
+      const after = normalized.slice(origin.length);
+      if (
+        after === "" ||
+        after[0] === "/" ||
+        after[0] === "?" ||
+        after[0] === "#"
+      )
+        return true;
+    }
+  }
+  return false;
 }
 
 function isValidApiKey(apiKey) {
-  if (isPreview) log("Braze Proxy: check api key:", apiKey);
-
-  if (!CONFIG.allowedApiKey) return true;
-
-  return apiKey === CONFIG.allowedApiKey;
+  if (!CONFIG.allowedApiKeys.length) return true;
+  for (let i = 0; i < CONFIG.allowedApiKeys.length; i++) {
+    if (CONFIG.allowedApiKeys[i] === apiKey) return true;
+  }
+  if (isPreview) log("Braze Proxy: no valid api key");
+  return false;
 }
 
 function setHeaders(origin) {
@@ -185,7 +220,7 @@ function buildTargetUrl(path, queryString) {
   return CONFIG.brazeBaseUrl + path + (queryString ? "?" + queryString : "");
 }
 
-function buildForwardHeaders(clientIp) {
+function buildForwardHeaders(clientIp, method) {
   const headers = {};
   const forwardHeaders = [].concat(
     CONFIG.standardHeaders,
@@ -195,15 +230,26 @@ function buildForwardHeaders(clientIp) {
     const value = getRequestHeader(header);
     if (value) headers[header] = value;
   });
+
+  if (method === "POST" && !headers["content-type"]) {
+    headers["content-type"] = "application/json";
+  }
+
   if (clientIp) {
     headers["x-forwarded-for"] = clientIp;
   }
+
   return headers;
 }
 
 function handleSdkSuccess(result) {
   if (result.statusCode >= 400) {
     return handleFailure("CDN returned: " + result.statusCode);
+  }
+  const origin = getRequestHeader("origin");
+  if (origin) {
+    setResponseHeader("access-control-allow-origin", origin);
+    setResponseHeader("vary", "origin");
   }
   setResponseHeader("cache-control", "public, max-age=14400");
   setResponseHeader("content-type", "application/javascript");
