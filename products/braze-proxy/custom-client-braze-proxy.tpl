@@ -149,8 +149,16 @@ ___TEMPLATE_PARAMETERS___
 
 
 ___SANDBOXED_JS_FOR_SERVER___
+/**
+ * © 2026 datapip.de — https://datapip.gumroad.com/l/braze-sgtm-proxy
+ * Unofficial community integration. Not affiliated with or endorsed by Braze, Inc.
+ * Braze™ is a trademark of Braze, Inc.
+ * Single-company license. Sharing, redistribution, or resale outside of the
+ * purchasing entity is strictly prohibited.
+ * Provided "as-is" without warranty. The author assumes no liability for data loss,
+ * tracking disruptions, or damages.
+ */
 
-// © 2026 datapip.de — Single-company license. Redistribution prohibited.
 const claimRequest = require("claimRequest");
 const getRequestPath = require("getRequestPath");
 const getRequestMethod = require("getRequestMethod");
@@ -697,65 +705,3 @@ scenarios:
     assertApi('setResponseStatus').wasCalledWith(403);
     assertApi('setResponseBody').wasCalledWith('Forbidden');
     assertApi('returnResponse').wasCalled();
-
-
-___NOTES___
-
-© 2026 datapip.de. All rights reserved.
-Single-company license. The purchase grants usage rights exclusively to the 
-purchasing company/entity for their own internal domains and containers.
-Sharing, redistribution, resale, modification for resale, and sublicensing 
-outside of the purchasing company are strictly prohibited.
-Unauthorized duplication violates applicable copyright law.
-
----
-
-# Braze Proxy Client — Setup Guide
-
-## What this client does
-Routes two types of Braze traffic through your sGTM server container so all
-requests originate from your first-party domain:
-
-1. **Web SDK delivery** — serves braze.min.js (and .map) from your domain
-   instead of js.appboycdn.com, bypassing ad blockers.
-2. **API proxy** — forwards /api/v3/ tracking, session, in-app message, content
-   card, and feature flag calls to your Braze SDK endpoint.
-
-## Step 1 — Configure the client
-- **API Endpoint**: your Braze SDK endpoint, e.g. https://sdk.iad-05.braze.com
-  (found in Braze > Settings > App Settings > SDK Endpoint)
-- **Allowed API Keys**: your Braze Web API key(s) (recommended)
-- **Allowed Origins**: your website origin(s), e.g. https://www.example.com (no trailing slash)
-
-## Step 2 — Initialize the Braze Web SDK
-Point the SDK at your sGTM custom domain:
-
-```js
-braze.initialize("YOUR-API-KEY", {
-  baseUrl: "https://YOUR-SGTM-DOMAIN.com",
-  // All other options remain unchanged
-});
-```
-
-This routes all API tracking calls (/api/v3/...) through your sGTM domain.
-The SDK script itself is loaded separately via the script tag in Step 3.
-
-## Step 3 — Load the SDK via your sGTM domain
-Replace your existing Braze SDK script tag:
-
-```html
-<!-- Before -->
-<script src="https://js.appboycdn.com/web-sdk/5.3.0/braze.min.js"></script>
-
-<!-- After -->
-<script src="https://YOUR-SGTM-DOMAIN.com/web-sdk/5.3.0/braze.min.js"></script>
-```
-
-Or use the Braze GTM Initialization Tag with the custom baseUrl set above.
-
-## Notes
-- This is an unofficial integration, not supported by Braze.
-- Tested with Braze Web SDK v5.x / v6.x.
-- If Braze adds new SDK headers, add them via Additional Headers in settings.
-
-

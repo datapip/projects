@@ -1,3 +1,13 @@
+/**
+ * © 2026 datapip.de — https://datapip.gumroad.com/l/braze-sgtm-proxy
+ * Unofficial community integration. Not affiliated with or endorsed by Braze, Inc.
+ * Braze™ is a trademark of Braze, Inc.
+ * Single-company license. Sharing, redistribution, or resale outside of the
+ * purchasing entity is strictly prohibited.
+ * Provided "as-is" without warranty. The author assumes no liability for data loss,
+ * tracking disruptions, or damages.
+ */
+
 const claimRequest = require("claimRequest");
 const getRequestPath = require("getRequestPath");
 const getRequestMethod = require("getRequestMethod");
