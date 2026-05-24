@@ -54,7 +54,7 @@ ___TEMPLATE_PARAMETERS___
         "type": "NON_EMPTY"
       }
     ],
-    "help": "Set this to your custom domain used by your Server-Side GTM Proxy for Braze",
+    "help": "Enter your sGTM tracking domain (e.g., data.yourdomain.com). Note: To fully proxy the tracking requests and secure your API keys on the server-side, you need the companion \u0027Braze Proxy Client\u0027 inside your sGTM container available on https://datapip.gumroad.com/l/braze-sgtm-proxy.",
     "valueHint": "data.yourdomain.com",
     "alwaysInSummary": true
   },
