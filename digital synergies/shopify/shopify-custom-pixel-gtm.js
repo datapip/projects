@@ -1,5 +1,5 @@
 /**
- * Version 1.4.9
+ * Version 1.5.1
  *
  * © 2026 datapip.de - Philipp Jaeckle – Custom implementation.
  *
@@ -608,8 +608,8 @@ analytics?.subscribe?.("checkout_address_info_submitted", async (event) => {
     return;
   }
 
-  __userEmail = (checkout.email || "").toLowerCase() || null;
-  if (__userEmail) {
+  if (checkout.email) {
+    __userEmail = (checkout.email || "").toLowerCase() || null;
     userEmailHash = await sha256(__userEmail);
   }
 
@@ -715,7 +715,7 @@ analytics?.subscribe?.("payment_info_submitted", (event) => {
   });
 });
 
-analytics?.subscribe?.("checkout_completed", (event) => {
+analytics?.subscribe?.("checkout_completed", async (event) => {
   flushEcommerce();
 
   const ga4_event_name = "purchase";
@@ -725,6 +725,11 @@ analytics?.subscribe?.("checkout_completed", (event) => {
   if (!checkout) {
     pushError(ga4_event_name, "missing analytics api data");
     return;
+  }
+
+  if (checkout.email) {
+    __userEmail = (checkout.email || "").toLowerCase() || null;
+    userEmailHash = await sha256(__userEmail);
   }
 
   const ga4_ecommerce_object = {
@@ -772,6 +777,8 @@ analytics?.subscribe?.("checkout_completed", (event) => {
   pushEvent({
     event: ga4_event_name,
     ecommerce: ga4_ecommerce_object,
+    user_email_hash: userEmailHash,
+    __user_email: __userEmail,
   });
 });
 
