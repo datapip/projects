@@ -1,0 +1,167 @@
+{
+  "type": "Event",
+  "pixelUid": {
+    "id": "283836758",
+    "type": "CUSTOM"
+  },
+  "event": {
+    "id": "97d1da51-6993-45f7-a411-29ff269e90b2",
+    "name": "checkout_completed",
+    "data": {
+      "checkout": {
+        "buyerAcceptsEmailMarketing": false,
+        "buyerAcceptsSmsMarketing": false,
+        "attributes": [],
+        "billingAddress": {
+          "address1": "Hardstrasse 73",
+          "address2": null,
+          "city": "Wettingen",
+          "country": "CH",
+          "countryCode": "CH",
+          "firstName": "Patrick",
+          "lastName": "Test",
+          "phone": null,
+          "province": null,
+          "provinceCode": null,
+          "zip": "5430"
+        },
+        "token": "a0e235cfeef6a43f49f52bbb22e25a56",
+        "currencyCode": "CHF",
+        "discountApplications": [],
+        "discountsAmount": {
+          "amount": 0,
+          "currencyCode": "CHF"
+        },
+        "email": "patrick.test@test.de",
+        "phone": null,
+        "lineItems": [
+          {
+            "discountAllocations": [],
+            "id": "53130849681750",
+            "quantity": 1,
+            "title": "Socken Herren 5er-Pack Bunt - Bluebird",
+            "variant": {
+              "id": "53130849681750",
+              "image": {
+                "src": "https://cdn.shopify.com/s/files/1/0924/0906/9910/files/173200-000_detail1_577bb698-e1b3-4c0f-9ab0-24daa275d665.png?v=1776186450"
+              },
+              "price": {
+                "amount": 29.9,
+                "currencyCode": "CHF"
+              },
+              "product": {
+                "id": "10335521243478",
+                "title": "Socken Herren 5er-Pack Bunt - Bluebird",
+                "vendor": "SCHIESSER",
+                "type": "",
+                "untranslatedTitle": "Socken Herren 5er-Pack Bunt - Bluebird",
+                "url": "/de-ch/products/socken-herren-5er-pack-bunt-bluebird-173200-000"
+              },
+              "sku": "173200-000-403",
+              "title": "39/42 / schwarz",
+              "untranslatedTitle": "39/42 / schwarz"
+            },
+            "finalLinePrice": {
+              "amount": 29.9,
+              "currencyCode": "CHF"
+            },
+            "sellingPlanAllocation": null,
+            "properties": [],
+            "lineComponents": []
+          }
+        ],
+        "localization": {
+          "country": {
+            "isoCode": "CH"
+          },
+          "language": {
+            "isoCode": "de-CH"
+          },
+          "market": {
+            "id": "gid://shopify/Market/106852712790",
+            "handle": "ch"
+          }
+        },
+        "order": {
+          "id": "7735618863446",
+          "customer": {
+            "id": "10490754924886",
+            "isFirstOrder": false
+          }
+        },
+        "delivery": {
+          "selectedDeliveryOptions": [
+            {
+              "cost": {
+                "amount": 0,
+                "currencyCode": "CHF"
+              },
+              "costAfterDiscounts": {
+                "amount": 0,
+                "currencyCode": "CHF"
+              },
+              "description": null,
+              "handle": "a0e235cfeef6a43f49f52bbb22e25a56-f279decb66e8e6ea5b6c5da5230fdec0",
+              "title": "Swiss Post",
+              "type": "shipping",
+              "targetLineItems": ["53130849681750"]
+            }
+          ]
+        },
+        "shippingAddress": {
+          "address1": "Hardstrasse 73",
+          "address2": null,
+          "city": "Wettingen",
+          "country": "CH",
+          "countryCode": "CH",
+          "firstName": "Patrick",
+          "lastName": "Test",
+          "phone": null,
+          "province": null,
+          "provinceCode": null,
+          "zip": "5430"
+        },
+        "subtotalPrice": {
+          "amount": 29.9,
+          "currencyCode": "CHF"
+        },
+        "shippingLine": {
+          "price": {
+            "amount": 0,
+            "currencyCode": "CHF"
+          }
+        },
+        "smsMarketingPhone": null,
+        "totalTax": {
+          "amount": 2.24,
+          "currencyCode": "CHF"
+        },
+        "totalPrice": {
+          "amount": 29.9,
+          "currencyCode": "CHF"
+        },
+        "transactions": [
+          {
+            "amount": {
+              "amount": 29.9,
+              "currencyCode": "CHF"
+            },
+            "gateway": "",
+            "paymentMethod": {
+              "type": "manualPayment",
+              "name": "Kauf auf Rechnung"
+            }
+          }
+        ]
+      }
+    },
+    "type": "standard",
+    "timestamp": "2026-06-05T16:10:43.505Z",
+    "context": "...",
+    "seq": 1,
+    "clientId": "fcb6411a-59ba-4940-a5f6-bfcdfe4470ea"
+  },
+  "eventNameAsSubscribed": "checkout_completed",
+  "subscriptionId": "f08518ad-a381-4417-a0cb-72c808354c81",
+  "status": "SUCCESS"
+}

@@ -1,5 +1,5 @@
 /**
- * Version 1.5.2
+ * Version 1.5.3
  *
  * © 2026 datapip.de - Philipp Jaeckle – Custom implementation.
  *
@@ -68,12 +68,14 @@ if (!isProd) {
       "[debug] dataLayer.push - event:",
       args[0]?.event || "unknown",
     );
-    console.log(...args);
+    console.log(JSON.stringify(...args, null, 2));
     console.groupEnd();
     return originalPush(...args);
   };
 
-  console.log("[debug] init - event", init);
+  console.groupCollapsed("[debug] init - event");
+  console.log(JSON.stringify(init, null, 2));
+  console.groupEnd();
 }
 
 gtag("consent", "default", {
