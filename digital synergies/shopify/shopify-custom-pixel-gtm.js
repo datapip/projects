@@ -1,5 +1,5 @@
 /**
- * Version 1.5.1
+ * Version 1.5.2
  *
  * © 2026 datapip.de - Philipp Jaeckle – Custom implementation.
  *
@@ -735,6 +735,7 @@ analytics?.subscribe?.("checkout_completed", async (event) => {
   const ga4_ecommerce_object = {
     currency: checkout?.totalPrice?.currencyCode || checkout?.currencyCode,
     value: Number(checkout?.totalPrice?.amount || 0),
+    new_customer: checkout?.order?.customer?.isFirstOrder === true,
     customer_type:
       checkout?.order?.customer?.isFirstOrder === false ? "returning" : "new",
     transaction_id: checkout?.order?.id || checkout?.token,
