@@ -1,0 +1,81 @@
+{
+  "context": {
+    "document": {
+      "location": {
+        "href": "https://account.schiesser.com/?buyer_flags=eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIxZmYwODgtd2gubXlzaG9waWZ5LmNvbSIsImZsYWdzIjpbXSwiZXhwIjoxNzgxMzQ1MjIzLCJuYmYiOjE3ODA3NDA0MjN9.s9bbNL-BMjck6U5KRsVtPyTm9XK5skIPTf55EGnTjLo&locale=de&new_login=1&region_country=CH",
+        "hash": "",
+        "host": "account.schiesser.com",
+        "hostname": "account.schiesser.com",
+        "origin": "https://account.schiesser.com",
+        "pathname": "/",
+        "port": "",
+        "protocol": "https:",
+        "search": "?buyer_flags=eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIxZmYwODgtd2gubXlzaG9waWZ5LmNvbSIsImZsYWdzIjpbXSwiZXhwIjoxNzgxMzQ1MjIzLCJuYmYiOjE3ODA3NDA0MjN9.s9bbNL-BMjck6U5KRsVtPyTm9XK5skIPTf55EGnTjLo&locale=de&new_login=1&region_country=CH"
+      },
+      "referrer": "",
+      "characterSet": "UTF-8",
+      "title": ""
+    },
+    "navigator": {
+      "language": "en-US",
+      "cookieEnabled": true,
+      "languages": ["en-US", "de-DE", "de", "en"],
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+    },
+    "window": {
+      "innerHeight": 1305,
+      "innerWidth": 2496,
+      "outerHeight": 1392,
+      "outerWidth": 3440,
+      "pageXOffset": 0,
+      "pageYOffset": 0,
+      "location": {
+        "href": "https://account.schiesser.com/?buyer_flags=eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIxZmYwODgtd2gubXlzaG9waWZ5LmNvbSIsImZsYWdzIjpbXSwiZXhwIjoxNzgxMzQ1MjIzLCJuYmYiOjE3ODA3NDA0MjN9.s9bbNL-BMjck6U5KRsVtPyTm9XK5skIPTf55EGnTjLo&locale=de&new_login=1&region_country=CH",
+        "hash": "",
+        "host": "account.schiesser.com",
+        "hostname": "account.schiesser.com",
+        "origin": "https://account.schiesser.com",
+        "pathname": "/",
+        "port": "",
+        "protocol": "https:",
+        "search": "?buyer_flags=eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIxZmYwODgtd2gubXlzaG9waWZ5LmNvbSIsImZsYWdzIjpbXSwiZXhwIjoxNzgxMzQ1MjIzLCJuYmYiOjE3ODA3NDA0MjN9.s9bbNL-BMjck6U5KRsVtPyTm9XK5skIPTf55EGnTjLo&locale=de&new_login=1&region_country=CH"
+      },
+      "origin": "https://account.schiesser.com",
+      "screen": {
+        "height": 1440,
+        "width": 3440
+      },
+      "screenX": 0,
+      "screenY": 0,
+      "scrollX": 0,
+      "scrollY": 0
+    }
+  },
+  "data": {
+    "customer": {
+      "email": "adrien.guenther@gmail.com",
+      "firstName": "Patrick",
+      "id": "10224020324694",
+      "lastName": "Test",
+      "phone": null,
+      "ordersCount": 3
+    },
+    "cart": null,
+    "shop": {
+      "name": "SCHIESSER",
+      "paymentSettings": {
+        "currencyCode": "EUR"
+      },
+      "myshopifyDomain": "1ff088-wh.myshopify.com",
+      "countryCode": "DE",
+      "storefrontUrl": "https://shop.schiesser.com"
+    },
+    "purchasingCompany": null
+  },
+  "customerPrivacy": {
+    "analyticsProcessingAllowed": false,
+    "marketingAllowed": false,
+    "preferencesProcessingAllowed": false,
+    "saleOfDataAllowed": true
+  }
+}
