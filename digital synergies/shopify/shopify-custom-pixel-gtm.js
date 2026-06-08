@@ -1,5 +1,5 @@
 /**
- * Version 1.5.3
+ * Version 1.5.4
  *
  * © 2026 datapip.de - Philipp Jaeckle – Custom implementation.
  *
@@ -619,7 +619,7 @@ analytics?.subscribe?.("checkout_address_info_submitted", async (event) => {
     currency: checkout?.totalPrice?.currencyCode || checkout?.currencyCode,
     value: Number(checkout?.totalPrice?.amount || 0),
     coupon: checkout?.discountApplications?.[0]?.title || "",
-    shipping_tier: checkout?.delivery?.selectedDeliveryOptions?.type,
+    shipping_tier: checkout?.delivery?.selectedDeliveryOptions?.[0]?.type,
     items: checkout?.lineItems
       ? checkout.lineItems.map((line, index) => ({
           item_id:
@@ -677,7 +677,7 @@ analytics?.subscribe?.("payment_info_submitted", (event) => {
     currency: checkout?.totalPrice?.currencyCode || checkout?.currencyCode,
     value: Number(checkout?.totalPrice?.amount || 0),
     coupon: checkout?.discountApplications?.[0]?.title || "",
-    payment_type: String(checkout?.paymentMethod || ""),
+    payment_type: checkout?.transactions?.[0]?.paymentMethod?.name || "",
     items: checkout?.lineItems
       ? checkout.lineItems.map((line, index) => ({
           item_id:
